@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:meta_weather_api/src/models/league/league_info.dart';
 
 import '../models/models.dart';
 import '../interfaces/deserializable.dart';

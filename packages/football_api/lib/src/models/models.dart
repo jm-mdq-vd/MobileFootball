@@ -1,6 +1,6 @@
 export 'country/country.dart';
 export 'league/league.dart';
-export 'league/league.dart';
+export 'league/league_info.dart';
 export 'team/team.dart';
 export 'team/team_info.dart';
 export 'fixture/fixture.dart';
