@@ -76,7 +76,7 @@ class MaxNumberOfRequestsReached implements Exception {
   String toString() => Exception('The maximum request per day was reached').toString();
 }
 
-class APIService {
+class FootballAPIClient {
   final String _getMethod = 'GET';
   final String _scheme = 'https';
   final String _host = 'v3.football.api-sports.io';
@@ -87,11 +87,11 @@ class APIService {
   int _numberOfRequest = 0;
   DateTime _lastRequestDate = DateTime.now();
 
-  APIService._privateConstructor();
+  FootballAPIClient._privateConstructor();
 
-  static final APIService _instance = APIService._privateConstructor();
+  static final FootballAPIClient _instance = FootballAPIClient._privateConstructor();
 
-  static APIService get shared => _instance;
+  static FootballAPIClient get shared => _instance;
 
   Future<APIResponse> getTeams(Map<String, dynamic>? parameters) {
     return _getResponseFromEndpoint(
