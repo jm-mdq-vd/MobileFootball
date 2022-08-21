@@ -9,6 +9,15 @@ class ResourceEvent<Resource> extends Equatable {
   List<Object?> get props => [];
 }
 
-ResourceEvent<League> getLeaguesByCountry(String country) => ResourceEvent(parameters: {
-  'code': country,
-});
+ResourceEvent<League> getLeaguesByCountry(String country) => ResourceEvent(
+  parameters: {
+    'code': country,
+  },
+);
+
+ResourceEvent<Team> getTeams(int league, int season) => ResourceEvent(
+  parameters: {
+    'league': league.toString(),
+    'season': season.toString(),
+  },
+);
