@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:page_transition/page_transition.dart';
 
 import 'package:football_repository/football_repository.dart';
+import 'package:mobile_football/resources/local_assets.dart';
+import 'package:mobile_football/view_models/cells/league_cell_view_model.dart';
+import 'package:mobile_football/widgets/generics/grids/grid.dart';
+import 'package:mobile_football/widgets/generics/grids/grid_representation.dart';
 
 void main() {
   runApp(const MobileFootballApp());
@@ -79,8 +85,13 @@ class MobileFootballApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: RepositoryProvider<LeagueRepository>(
+      home: AnimatedSplashScreen(
+        splash: LocalAssets.splashLottie,
+        backgroundColor: Colors.white,
+        splashIconSize: 400,
+        duration: 1,
+        pageTransitionType: PageTransitionType.fade,
+        nextScreen: RepositoryProvider<LeagueRepository>(
           create: (context) => LeagueRepository(),
           child: BlocProvider<LeagueBloc>(
             create: (context) => LeagueBloc(
@@ -88,17 +99,20 @@ class MobileFootballApp extends StatelessWidget {
             )..add(GetLeaguesByCountry('AR')),
             child: BlocBuilder<LeagueBloc, LeagueState>(
               buildWhen: (_, current) => current.status.isSuccess,
-              builder: (context, state) => ListView.builder(
-                itemCount: state.leagues.length,
-                itemBuilder: (context, index) {
-                  return Text(state.leagues[index].name);
-                },
-              ),
+              builder: _buildLeagueGrid,
             ),
           ),
         ),
       ),
     );
+  }
+
+  Grid _buildLeagueGrid(BuildContext context, LeagueState state) {
+    final gridRepresentation = GridRepresentation(
+      title: 'Argentina\'s Leagues',
+      content: state.leagues.map((league) => LeagueCellViewModel(league: league)).toList(),
+    );
+    return Grid(representation: gridRepresentation);
   }
 }
 

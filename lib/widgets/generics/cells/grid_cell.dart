@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'cell_representable.dart';
 import '../../../utility/svg_provider.dart';
-import '../../../utility/extensions/context_extension.dart';
 import '../../../resources/local_assets.dart';
 
 class GridCell extends StatelessWidget {
@@ -24,7 +23,6 @@ class GridCell extends StatelessWidget {
   final bool isSelected;
   final double width;
 
-
   @override
   Widget build(BuildContext context) {
     final isSVG = model.imageURL.split('.').last == 'svg';
@@ -36,7 +34,7 @@ class GridCell extends StatelessWidget {
     );
 
     return Container(
-      width: width, // (context.width / crossAxisCount) - (itemSpacing * crossAxisCount),
+      width: width,
       height: _height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
@@ -56,16 +54,14 @@ class GridCell extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              width: 100,// layout.smallImage ? 59 : 100,
-              height: 95,// layout.smallImage ? 45 : 95,
-              /*
-              decoration: layout.imageIsBordered ? BoxDecoration(
+              width: isSVG ? 59 : 100,
+              height: isSVG ? 45 : 95,
+              decoration: isSVG ? BoxDecoration(
                 border: Border.all(
                   color: Colors.black,
                   width: 1,
                 ),
               ) : null,
-              */
               child: image,
             ),
             const SizedBox(
