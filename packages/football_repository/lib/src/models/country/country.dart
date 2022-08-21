@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import '../../utility/svg_provider.dart';
-
 /*
 part 'country.g.dart';
 
