@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:football_api/football_api.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/models.dart';
@@ -17,6 +18,23 @@ enum Endpoint {
   teams,
   fixtures,
   venues,
+}
+
+extension on Endpoint {
+  dynamic Function(Map<String, dynamic> object) get parser {
+    switch (this) {
+      case Endpoint.countries:
+        return Country.fromJson;
+      case Endpoint.leagues:
+        return LeagueInfo.fromJson;
+      case Endpoint.teams:
+        return TeamInfo.fromJson;
+      case Endpoint.fixtures:
+        return Fixture.fromJson;
+      case Endpoint.venues:
+        return Venue.fromJson;
+    }
+  }
 }
 
 enum APIStatusCode {
@@ -92,40 +110,12 @@ class FootballAPIClient {
 
   static FootballAPIClient get shared => _instance;
 
-  Future<APIResponse> getTeams(Map<String, dynamic>? parameters) {
-    return _getResponseFromEndpoint(
-      Endpoint.teams,
-      parameters, // {'league': leagueId.toString(), 'season': season.toString()},
-          (object) => TeamInfo.fromJson(object),
-    );
-  }
-
-  Future<APIResponse> getLeaguesByCountry(Map<String, dynamic>? parameters) async {
-    return _getResponseFromEndpoint(
-      Endpoint.leagues,
-      parameters, // {'code': countryId},
-          (object) => LeagueInfo.fromJson(object),
-    );
-  }
-
-  Future<APIResponse> getCountries(Map<String, dynamic>? parameters) async {
-    return _getResponseFromEndpoint(
-      Endpoint.countries,
-      parameters, // {if (searchTerm != null) 'search': searchTerm},
-          (object) => Country.fromJson(object),
-    );
-  }
-
-  Future<APIResponse> _getResponseFromEndpoint<T extends Deserializable>(
-      Endpoint endpoint,
-      Map<String, dynamic>? parameters,
-      T Function(Map<String, dynamic> object) fromJson,
-      ) async {
+  Future<APIResponse> getResponseFromEndpoint<T>(Endpoint endpoint, Map<String, dynamic>? parameters,) async {
     final endpointPath = _endpointPath(endpoint);
     return _get<T>(
       endpointPath,
       parameters,
-          (list) => List<T>.from(list.map((object) => fromJson(object))),
+          (list) => List<T>.from(list.map((object) => endpoint.parser(object))),
     );
   }
 

@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 class League extends Equatable {
   final int id;
@@ -15,5 +14,10 @@ class League extends Equatable {
   });
 
   @override
-  List<Object> get props => [id, name, logo, country];
+  List<Object> get props => [
+    id,
+    name,
+    logo,
+    country,
+  ];
 }

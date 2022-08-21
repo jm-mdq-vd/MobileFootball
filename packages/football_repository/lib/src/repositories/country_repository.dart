@@ -8,7 +8,10 @@ class CountryRepository {
   final FootballAPIClient _client;
 
   Future<List<Country>> getCountries() async {
-    final response = await _client.getCountries(null);
+    final response = await _client.getResponseFromEndpoint(
+      Endpoint.countries,
+      null,
+    );
     return response.response as List<Country>;
   }
 }

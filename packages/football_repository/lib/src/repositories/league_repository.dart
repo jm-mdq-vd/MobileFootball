@@ -1,16 +1,18 @@
 import 'dart:async';
-
-import '../models/league/league.dart';
 import 'package:football_api/football_api.dart' hide League;
 
-class LeagueRepository {
+import 'repository.dart';
+import '../models/league/league.dart';
+import '../extensions/list_extension.dart';
+
+class LeagueRepository implements Repository<League> {
   LeagueRepository() : _client = FootballAPIClient.shared;
 
   final FootballAPIClient _client;
 
-  Future<List<League>> getLeaguesByCountry(String country) async {
-    final response = await _client.getLeaguesByCountry({'code': country});
-    final leaguesInfo = response.response as List<LeagueInfo>;
+  Future<List<League>> getResource(Map<String, dynamic>? parameters) async {
+    final response = await _client.getResponseFromEndpoint(Endpoint.leagues, parameters,);
+    final leaguesInfo = response.response.castToType<LeagueInfo>();
     return leaguesInfo.map((leagueInfo) => League(
       id: leagueInfo.league.id,
       name: leagueInfo.league.name,

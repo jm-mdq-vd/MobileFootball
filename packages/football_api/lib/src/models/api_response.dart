@@ -25,7 +25,7 @@ class APIResponse<T> {
   final String get;
   final int results;
   final Paging paging;
-  final List response;
+  List response;
 
   APIResponse({
     required this.get,
