@@ -6,9 +6,9 @@ import '../models/team/team.dart';
 import '../extensions/list_extension.dart';
 
 class TeamRepository implements Repository<Team> {
-  TeamRepository() : _client = FootballAPIClient.shared;
+  TeamRepository(ApiClient? client) : _client = client != null ? client : MockAPIClient();
 
-  final FootballAPIClient _client;
+  final ApiClient _client;
 
   Future<List<Team>> getResource(Map<String, dynamic>? parameters) async {
     final response = await _client.getResponseFromEndpoint(Endpoint.teams, parameters,);

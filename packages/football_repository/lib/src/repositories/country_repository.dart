@@ -7,9 +7,9 @@ import '../models/country/country_info.dart';
 import '../extensions/list_extension.dart';
 
 class CountryRepository implements Repository<CountryInfo> {
-  CountryRepository() : _client = FootballAPIClient.shared;
+  CountryRepository(ApiClient? client) : _client = client != null ? client : MockAPIClient();
 
-  final FootballAPIClient _client;
+  final ApiClient _client;
 
   Future<List<CountryInfo>> getResource(Map<String, dynamic>? parameters) async {
     final response = await _client.getResponseFromEndpoint(

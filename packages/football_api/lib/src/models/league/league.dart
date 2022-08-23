@@ -6,7 +6,7 @@ part 'league.g.dart';
 /// A single league from https://v3.football.api-sports.io/leagues?code=<country's code>
 /// {
 ///   "id": 134
-///   "name": "Torneo Federal A""
+///   "name": "Torneo Federal A"
 ///   "code": "League"
 ///   "flag": "https://media.api-sports.io/football/leagues/134.png"
 /// }

@@ -7,9 +7,9 @@ import '../models/league/league.dart';
 import '../extensions/list_extension.dart';
 
 class LeagueRepository implements Repository<League> {
-  LeagueRepository() : _client = FootballAPIClient.shared;
+  LeagueRepository(ApiClient? client) : _client = client != null ? client : MockAPIClient();
 
-  final FootballAPIClient _client;
+  final ApiClient _client;
 
   Future<List<League>> getResource(Map<String, dynamic>? parameters) async {
     final response = await _client.getResponseFromEndpoint(Endpoint.leagues, parameters,);

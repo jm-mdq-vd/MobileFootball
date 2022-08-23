@@ -1,40 +1,15 @@
 import 'dart:convert';
 import 'dart:developer' as devlog;
-import 'package:football_api/football_api.dart';
 import 'package:http/http.dart' as http;
 
+import 'endpoint.dart';
+import 'api_client.dart';
 import '../models/models.dart';
-import '../interfaces/deserializable.dart';
 
 extension DateHelpers on DateTime {
   bool get isToday {
     final now = DateTime.now();
     return now.day == day && now.month == month && now.year == year;
-  }
-}
-
-enum Endpoint {
-  countries,
-  leagues,
-  teams,
-  fixtures,
-  venues,
-}
-
-extension on Endpoint {
-  dynamic Function(Map<String, dynamic> object) get parser {
-    switch (this) {
-      case Endpoint.countries:
-        return Country.fromJson;
-      case Endpoint.leagues:
-        return LeagueInfo.fromJson;
-      case Endpoint.teams:
-        return TeamInfo.fromJson;
-      case Endpoint.fixtures:
-        return Fixture.fromJson;
-      case Endpoint.venues:
-        return Venue.fromJson;
-    }
   }
 }
 
@@ -94,7 +69,7 @@ class MaxNumberOfRequestsReached implements Exception {
   String toString() => Exception('The maximum request per day was reached').toString();
 }
 
-class FootballAPIClient {
+class FootballAPIClient implements ApiClient {
   final String _getMethod = 'GET';
   final String _scheme = 'https';
   final String _host = 'v3.football.api-sports.io';
@@ -112,7 +87,7 @@ class FootballAPIClient {
   static FootballAPIClient get shared => _instance;
 
   Future<APIResponse> getResponseFromEndpoint<T>(Endpoint endpoint, Map<String, dynamic>? parameters,) async {
-    final endpointPath = _endpointPath(endpoint);
+    final endpointPath = endpoint.path;
     return _get<T>(
       endpointPath,
       parameters,
@@ -151,21 +126,6 @@ class FootballAPIClient {
       return APIResponse.fromJson(decodedJson, fromJson);
     } else {
       throw ServiceError(streamedResponse.statusCode);
-    }
-  }
-
-  String _endpointPath(Endpoint endpoint) {
-    switch (endpoint) {
-      case Endpoint.countries:
-        return 'countries';
-      case Endpoint.leagues:
-        return 'leagues';
-      case Endpoint.teams:
-        return 'teams';
-      case Endpoint.fixtures:
-        return 'fixtures';
-      case Endpoint.venues:
-        return 'venues';
     }
   }
 }

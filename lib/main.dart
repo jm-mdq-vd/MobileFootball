@@ -50,7 +50,7 @@ class LeaguesGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider<LeagueRepository>(
-      create: (context) => LeagueRepository(),
+      create: (context) => LeagueRepository(null),
       child: BlocProvider<ResourceBloc<League>>(
         create: (context) => ResourceBloc(
           repository: context.read<LeagueRepository>(),
@@ -94,7 +94,7 @@ class TeamsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider<TeamRepository>(
-      create: (context) => TeamRepository(),
+      create: (context) => TeamRepository(null),
       child: BlocProvider<ResourceBloc<Team>>(
         create: (context) => ResourceBloc(
           repository: context.read<TeamRepository>(),
@@ -122,7 +122,7 @@ class CountriesGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider<CountryRepository>(
-      create: (context) => CountryRepository(),
+      create: (context) => CountryRepository(null),
       child: BlocProvider<ResourceBloc<CountryInfo>>(
         create: (context) => ResourceBloc(
           repository: context.read<CountryRepository>(),
