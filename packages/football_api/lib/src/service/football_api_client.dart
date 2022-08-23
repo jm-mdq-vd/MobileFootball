@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer' as devlog;
 import 'package:football_api/football_api.dart';
 import 'package:http/http.dart' as http;
 
@@ -141,6 +142,7 @@ class FootballAPIClient {
     );
 
     request.headers.addAll({_apiHeaderKey: _key});
+    devlog.log(request.url.toString());
 
     final streamedResponse = await request.send();
     if (streamedResponse.statusCode == 200) {

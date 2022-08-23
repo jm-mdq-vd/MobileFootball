@@ -1,17 +1,39 @@
 import 'dart:async';
-
+import 'dart:developer' as devlog;
 import 'package:football_api/football_api.dart';
 
-class CountryRepository {
+import 'repository.dart';
+import '../models/country/country_info.dart';
+import '../extensions/list_extension.dart';
+
+class CountryRepository implements Repository<CountryInfo> {
   CountryRepository() : _client = FootballAPIClient.shared;
 
   final FootballAPIClient _client;
 
-  Future<List<Country>> getCountries() async {
+  Future<List<CountryInfo>> getResource(Map<String, dynamic>? parameters) async {
     final response = await _client.getResponseFromEndpoint(
       Endpoint.countries,
       null,
     );
-    return response.response as List<Country>;
+    final countries = response.response.castToType<Country>();
+    devlog.log('Countries fetched ${countries.length}');
+    List<CountryInfo> list = [];
+    for (final country in countries) {
+      /*
+      final leagues = await _client.getResponseFromEndpoint(
+          Endpoint.leagues,
+          {'code': country.code}
+      );
+      */
+      list.add(CountryInfo(
+        name: country.name,
+        code: country.code,
+        flag: country.flag,
+        // numberOfLeagues: await leagues.response.length,
+      ));
+    }
+
+    return list;
   }
 }

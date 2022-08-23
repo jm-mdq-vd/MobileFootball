@@ -1,17 +1,21 @@
 import 'package:equatable/equatable.dart';
 
-class League extends Equatable {
-  final int id;
-  final String name;
-  final String logo;
-  final String country;
+import '../season/league_season.dart';
 
-  League({
+class League extends Equatable {
+  const League({
     required this.id,
     required this.name,
     required this.logo,
     required this.country,
+    required this.seasons,
   });
+
+  final int id;
+  final String name;
+  final String logo;
+  final String country;
+  final List<LeagueSeason> seasons;
 
   @override
   List<Object> get props => [
@@ -19,5 +23,6 @@ class League extends Equatable {
     name,
     logo,
     country,
+    seasons,
   ];
 }

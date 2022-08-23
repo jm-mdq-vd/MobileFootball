@@ -21,3 +21,7 @@ ResourceEvent<Team> getTeams(int league, int season) => ResourceEvent(
     'season': season.toString(),
   },
 );
+
+ResourceEvent<CountryInfo> getCountries() => ResourceEvent(
+  parameters: {},
+);
