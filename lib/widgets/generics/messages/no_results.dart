@@ -6,9 +6,18 @@ class NoResults extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xB9EEECEC),
+      color: Colors.white,
       child: const Center(
-        child: Text('No Results',),
+        child: Text(
+          'No Results',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 14,
+            fontWeight: FontWeight.normal,
+            decoration: TextDecoration.none,
+          ),
+        ),
       ),
     );
   }

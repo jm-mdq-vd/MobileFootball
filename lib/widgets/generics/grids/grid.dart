@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:football_repository/football_repository.dart';
 import 'package:mobile_football/widgets/generics/cells/cell_representable.dart';
 
 import 'grid_representation.dart';
