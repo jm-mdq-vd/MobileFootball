@@ -6,7 +6,7 @@ import '../models/team/team.dart';
 import '../extensions/list_extension.dart';
 
 class TeamRepository implements Repository<Team> {
-  TeamRepository(ApiClient? client) : _client = client != null ? client : MockAPIClient();
+  TeamRepository(ApiClient? client) : _client = client != null ? client : FootballAPIClient.shared;
 
   final ApiClient _client;
 

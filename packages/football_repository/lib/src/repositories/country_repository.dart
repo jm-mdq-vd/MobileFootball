@@ -7,7 +7,7 @@ import '../models/country/country_info.dart';
 import '../extensions/list_extension.dart';
 
 class CountryRepository implements Repository<CountryInfo> {
-  CountryRepository(ApiClient? client) : _client = client != null ? client : MockAPIClient();
+  CountryRepository(ApiClient? client) : _client = client != null ? client : FootballAPIClient.shared;
 
   final ApiClient _client;
 

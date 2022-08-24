@@ -7,7 +7,7 @@ import '../models/league/league.dart';
 import '../extensions/list_extension.dart';
 
 class LeagueRepository implements Repository<League> {
-  LeagueRepository(ApiClient? client) : _client = client != null ? client : MockAPIClient();
+  LeagueRepository(ApiClient? client) : _client = client != null ? client : FootballAPIClient.shared;
 
   final ApiClient _client;
 
