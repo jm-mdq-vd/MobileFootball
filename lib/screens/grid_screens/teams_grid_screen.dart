@@ -11,10 +11,12 @@ import 'grid_screen.dart';
 class TeamsGridScreen extends StatelessWidget {
   const TeamsGridScreen({
     super.key,
+    required this.title,
     required this.leagueId,
     required this.season,
   });
 
+  final String title;
   final String leagueId;
   final String season;
 
@@ -31,8 +33,8 @@ class TeamsGridScreen extends StatelessWidget {
           builder: (context, state) {
             return GridScreen<Team>(
               state: state,
-              title: 'Team',
-              loaderMessage: 'Getting all the teams from (league)...',
+              title: title,
+              loaderMessage: 'Getting all the teams from $title...',
               content: state.resources.map((team) => TeamCellViewModel(team: team)).toList(),
               onSelection: (_) {},
             );

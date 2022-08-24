@@ -12,9 +12,11 @@ import '../table_screens/seasons_table_screen.dart';
 class LeaguesGridScreen extends StatelessWidget {
   const LeaguesGridScreen({
     super.key,
+    required this.title,
     required this.country,
   });
 
+  final String title;
   final String country;
 
   @override
@@ -30,8 +32,8 @@ class LeaguesGridScreen extends StatelessWidget {
           builder: (context, state) {
             return GridScreen<League>(
               state: state,
-              title: 'Country\'s Leagues',
-              loaderMessage: 'Getting all the leagues from (country)...',
+              title: '$title\'s Leagues',
+              loaderMessage: 'Getting all the leagues from $title...',
               content: state.resources.map((league) => LeagueCellViewModel(league: league)).toList(),
               onSelection: (selectedItem) {
                 Navigator.push(

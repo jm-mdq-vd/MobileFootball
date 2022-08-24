@@ -28,6 +28,7 @@ class SeasonsGridScreen extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => TeamsGridScreen(
+              title: selectedItem.title,
               leagueId: selectedItem.id,
               season: selectedSeason.id.toString(),
             ),

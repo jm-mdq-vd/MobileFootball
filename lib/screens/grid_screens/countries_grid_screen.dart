@@ -34,7 +34,10 @@ class CountriesGridScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LeaguesGridScreen(country: selectedItem.id),
+                    builder: (context) => LeaguesGridScreen(
+                      title: selectedItem.title,
+                      country: selectedItem.id,
+                    ),
                   ),
                 );
               },
