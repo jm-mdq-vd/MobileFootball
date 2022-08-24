@@ -82,34 +82,35 @@ class _GridState extends State<Grid> {
       body: Container(
         padding: const EdgeInsets.all(_insets),
         color: const Color(0xB9EEECEC),
-        child: Column(
+        child: ListView(
+          shrinkWrap: true,
           children: [
             _searchBar(),
-            Expanded(
-              child: GridView.builder(
-                clipBehavior: Clip.none,
-                scrollDirection: Axis.vertical,
-                gridDelegate: widget.delegate,
-                itemCount: widget.itemCount,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      if (mounted) {
-                        setState(() {
-                          _selectedIndex = index;
-                        });
-                        widget.itemSelectedAtIndex(index);
-                      }
-                    },
-                    child: GridCell(
-                      model: widget.itemAtIndex(index),
-                      isSelected: _selectedIndex == index,
-                      width: (context.width / widget.crossAxisCount) -
-                          (widget.itemSpacing * widget.crossAxisCount),
-                    ),
-                  );
-                },
-              ),
+            GridView.builder(
+              clipBehavior: Clip.none,
+              scrollDirection: Axis.vertical,
+              physics: NeverScrollableScrollPhysics(), // to disable GridView's scrolling
+              shrinkWrap: true,
+              gridDelegate: widget.delegate,
+              itemCount: widget.itemCount,
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () {
+                    if (mounted) {
+                      setState(() {
+                        _selectedIndex = index;
+                      });
+                      widget.itemSelectedAtIndex(index);
+                    }
+                  },
+                  child: GridCell(
+                    model: widget.itemAtIndex(index),
+                    isSelected: _selectedIndex == index,
+                    width: (context.width / widget.crossAxisCount) -
+                        (widget.itemSpacing * widget.crossAxisCount),
+                  ),
+                );
+              },
             ),
           ],
         ),
