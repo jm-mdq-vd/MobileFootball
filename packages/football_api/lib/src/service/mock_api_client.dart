@@ -90,6 +90,42 @@ final _leagues = """
             "odds": true,
             "predictions": true
           }
+        },
+        {
+          "year": 2021,
+          "start": "2021-02-12",
+          "end": "2021-10-01",
+          "current": false,
+          "coverage": {
+            "fixtures": {
+              "events": true,
+              "lineups": true,
+              "statistics_fixtures": false,
+              "statistics_players": false
+            },
+            "standings": true,
+            "players": true,
+            "odds": true,
+            "predictions": true
+          }
+        },
+        {
+          "year": 2020,
+          "start": "2020-02-12",
+          "end": "2020-10-01",
+          "current": false,
+          "coverage": {
+            "fixtures": {
+              "events": true,
+              "lineups": true,
+              "statistics_fixtures": false,
+              "statistics_players": false
+            },
+            "standings": true,
+            "players": true,
+            "odds": true,
+            "predictions": true
+          }
         }
       ]
     }      
@@ -101,7 +137,7 @@ final _teams = """
 {
   "get": "teams",
   "results": 1,
-  "paging": 
+  "paging":
   {
     "current": 1,
     "total": 1

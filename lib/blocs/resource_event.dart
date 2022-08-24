@@ -15,10 +15,10 @@ ResourceEvent<League> getLeaguesByCountry(String country) => ResourceEvent(
   },
 );
 
-ResourceEvent<Team> getTeams(int league, int season) => ResourceEvent(
+ResourceEvent<Team> getTeams(String league, String season) => ResourceEvent(
   parameters: {
-    'league': league.toString(),
-    'season': season.toString(),
+    'league': league,
+    'season': season,
   },
 );
 

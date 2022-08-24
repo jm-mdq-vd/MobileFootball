@@ -4,8 +4,8 @@ import 'table_representation.dart';
 import '../cells/cell.dart';
 import '../cells/cell_representable.dart';
 
-class Table extends StatefulWidget {
-  const Table({
+class UnorderedList extends StatefulWidget {
+  const UnorderedList({
     super.key,
     required this.representation,
     this.onSelection = null,
@@ -19,11 +19,18 @@ class Table extends StatefulWidget {
   int get itemCount => representation.content.length;
   BaseCellRepresentable itemAtIndex(int index) => representation.content[index];
 
+  void itemSelectedAtIndex(int index) {
+    final selectedCell = itemAtIndex(index);
+    if (onSelection != null) {
+      onSelection!(selectedCell);
+    }
+  }
+
   @override
-  State<Table> createState() => _TableState();
+  State<UnorderedList> createState() => _TableState();
 }
 
-class _TableState extends State<Table> {
+class _TableState extends State<UnorderedList> {
   int _selectedIndex = -1;
 
   @override
@@ -39,7 +46,22 @@ class _TableState extends State<Table> {
           children: [
             Expanded(
               child: ListView.builder(
-                itemBuilder: (context, index) => ListTile(title: Cell(model: widget.itemAtIndex(index),),),
+                itemBuilder: (context, index) => ListTile(
+                  title: GestureDetector(
+                    onTap: () {
+                      if (mounted) {
+                        setState(() {
+                          _selectedIndex = index;
+                        });
+                        widget.itemSelectedAtIndex(index);
+                      }
+                    },
+                    child: Cell(
+                      model: widget.itemAtIndex(index),
+                      isSelected: _selectedIndex == index,
+                    ),
+                  ),
+                ),
                 itemCount: widget.itemCount,
               ),
             ),

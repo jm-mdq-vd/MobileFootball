@@ -18,4 +18,6 @@ class LeagueCellViewModel implements CellRepresentable {
 
   @override
   String get imageURL => league.logo;
+
+  List<LeagueSeason> get seasons => league.seasons;
 }
