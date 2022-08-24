@@ -20,17 +20,10 @@ class CountryRepository implements Repository<CountryInfo> {
     devlog.log('Countries fetched ${countries.length}');
     List<CountryInfo> list = [];
     for (final country in countries) {
-      /*
-      final leagues = await _client.getResponseFromEndpoint(
-          Endpoint.leagues,
-          {'code': country.code}
-      );
-      */
       list.add(CountryInfo(
         name: country.name,
         code: country.code,
         flag: country.flag,
-        // numberOfLeagues: await leagues.response.length,
       ));
     }
 
