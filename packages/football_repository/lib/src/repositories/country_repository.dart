@@ -15,10 +15,9 @@ class CountryRepository implements Repository<CountryInfo> {
   final CacheRepository _cache;
   final ApiClient _client;
 
-  Future<List<CountryInfo>> getResource(Map<String, dynamic>? parameters) async {
-    final List<CountryInfo>? cachedInfo = _cache.valueForKey('countries');
+  Future<List<CountryInfo>> getResource(Map<String, dynamic> parameters) async {
+    final List<CountryInfo>? cachedInfo = _cache.getResponseFromEndpoint(Endpoint.countries, parameters,);
     if (cachedInfo != null) return cachedInfo;
-
     final response = await _client.getResponseFromEndpoint(
       Endpoint.countries,
       null,
@@ -35,7 +34,11 @@ class CountryRepository implements Repository<CountryInfo> {
     }
 
     list.removeWhere((country) => country.name == "World");
-    _cache.saveWithKey('countries', list);
+    _cache.saveValueForEndpoint(
+      Endpoint.countries,
+      parameters,
+      list,
+    );
     return list;
   }
 }

@@ -15,9 +15,8 @@ class TeamRepository implements Repository<Team> {
 
   final ApiClient _client;
 
-  Future<List<Team>> getResource(Map<String, dynamic>? parameters) async {
-    final league = parameters!['league'];
-    final List<Team>? cachedInfo = _cache.valueForKey('teams_$league');
+  Future<List<Team>> getResource(Map<String, dynamic> parameters) async {
+    final List<Team>? cachedInfo = _cache.getResponseFromEndpoint(Endpoint.teams, parameters,);
     if (cachedInfo != null) return cachedInfo;
 
     final response = await _client.getResponseFromEndpoint(Endpoint.teams, parameters,);
@@ -36,7 +35,11 @@ class TeamRepository implements Repository<Team> {
       stadiumImage: teamInfo.venue.image,
     )).toList();
 
-    _cache.saveWithKey('teams_$league', teams);
+    _cache.saveValueForEndpoint(
+      Endpoint.teams,
+      parameters,
+      teams,
+    );
     return teams;
   }
 }

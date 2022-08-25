@@ -16,9 +16,9 @@ class LeagueRepository implements Repository<League> {
   final CacheRepository _cache;
   final ApiClient _client;
 
-  Future<List<League>> getResource(Map<String, dynamic>? parameters) async {
-    final code = parameters!['code'];
-    final List<League>? cachedInfo = _cache.valueForKey('leagues_$code');
+  Future<List<League>> getResource(Map<String, dynamic> parameters) async {
+    final code = parameters['code'];
+    final List<League>? cachedInfo = _cache.getResponseFromEndpoint(Endpoint.leagues, parameters,);
     if (cachedInfo != null) return cachedInfo;
 
     final response = await _client.getResponseFromEndpoint(Endpoint.leagues, parameters,);
@@ -49,7 +49,11 @@ class LeagueRepository implements Repository<League> {
       );
     }).toList();
 
-    _cache.saveWithKey('leagues_$code', leagues);
+    _cache.saveValueForEndpoint(
+      Endpoint.leagues,
+      parameters,
+      leagues,
+    );
     return leagues;
   }
 }
