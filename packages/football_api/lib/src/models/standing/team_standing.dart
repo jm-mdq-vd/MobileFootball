@@ -24,7 +24,51 @@ class Matches implements Deserializable {
   @override
   Matches Function(Map<String, dynamic> object) get deserialize => Matches.fromJson;
 }
-
+/// {
+///   "rank":1,
+//    "team": {
+//      "id":455,
+//      "name":"Atletico Tucuman",
+//      "logo":"https://media.api-sports.io/football/teams/455.png"
+//    },
+//    "points":32,
+//    "goalsDiff":12,
+//    "group":"Liga Profesional Argentina: 2nd Phase",
+//    "form":"WDWLW",
+//    "status":"same",
+//    "description":"CONMEBOL Libertadores",
+//    "all":{
+//      "played":15,
+//      "win":9,
+//      "draw":5,
+//      "lose":1,
+//      "goals":{
+//        "for":18,
+//        "against":6
+//      }
+//    },
+//    "home":{
+//      "played":8,
+//      "win":6,
+//      "draw":2,
+//      "lose":0,
+//      "goals":{
+//        "for":14,
+//        "against":3
+//      }
+//    },
+//    "away":{
+//      "played":7,
+//      "win":3,
+//      "draw":3,
+//      "lose":1,
+//      "goals":{
+//        "for":4,
+//        "against":3
+//      }
+//    },
+//    "update":"2022-08-24T00:00:00+00:00"
+//  },
 @JsonSerializable()
 class TeamStanding implements Deserializable {
   final int rank;

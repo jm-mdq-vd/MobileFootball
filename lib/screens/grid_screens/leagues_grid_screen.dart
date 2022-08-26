@@ -40,7 +40,7 @@ class LeaguesGridScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) {
-                      return SeasonsGridScreen(selectedItem: selectedItem,);
+                      return SeasonsTableScreen(selectedItem: selectedItem,);
                     },
                   ),
                 );

@@ -8,15 +8,12 @@ import '../cache/cache_repository.dart';
 
 class TeamRepository implements Repository<Team> {
   TeamRepository(ApiClient? client)
-      : _cache = CacheRepository.shared,
-        _client = client != null ? client : FootballAPIClient.shared;
-
-  final CacheRepository _cache;
+      : _client = client != null ? client : FootballAPIClient.shared;
 
   final ApiClient _client;
 
   Future<List<Team>> getResource(Map<String, dynamic> parameters) async {
-    final List<Team>? cachedInfo = _cache.getResponseFromEndpoint(Endpoint.teams, parameters,);
+    final List<Team>? cachedInfo = CacheRepository.shared.getResponseFromEndpoint(Endpoint.teams, parameters,);
     if (cachedInfo != null) return cachedInfo;
 
     final response = await _client.getResponseFromEndpoint(Endpoint.teams, parameters,);
@@ -35,7 +32,7 @@ class TeamRepository implements Repository<Team> {
       stadiumImage: teamInfo.venue.image,
     )).toList();
 
-    _cache.saveValueForEndpoint(
+    CacheRepository.shared.saveValueForEndpoint(
       Endpoint.teams,
       parameters,
       teams,

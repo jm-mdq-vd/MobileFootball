@@ -9,14 +9,12 @@ import '../cache/cache_repository.dart';
 
 class CountryRepository implements Repository<CountryInfo> {
   CountryRepository(ApiClient? client)
-      : _cache = CacheRepository.shared,
-        _client = client != null ? client : FootballAPIClient.shared;
+      : _client = client != null ? client : FootballAPIClient.shared;
 
-  final CacheRepository _cache;
   final ApiClient _client;
 
   Future<List<CountryInfo>> getResource(Map<String, dynamic> parameters) async {
-    final List<CountryInfo>? cachedInfo = _cache.getResponseFromEndpoint(Endpoint.countries, parameters,);
+    final List<CountryInfo>? cachedInfo = CacheRepository.shared.getResponseFromEndpoint(Endpoint.countries, parameters,);
     if (cachedInfo != null) return cachedInfo;
     final response = await _client.getResponseFromEndpoint(
       Endpoint.countries,
@@ -34,7 +32,7 @@ class CountryRepository implements Repository<CountryInfo> {
     }
 
     list.removeWhere((country) => country.name == "World");
-    _cache.saveValueForEndpoint(
+    CacheRepository.shared.saveValueForEndpoint(
       Endpoint.countries,
       parameters,
       list,

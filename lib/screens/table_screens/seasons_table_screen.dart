@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_football/screens/table_screens/standing_table_screen.dart';
 
 import 'package:mobile_football/view_models/cells/season_cell_view_model.dart';
 import 'package:mobile_football/widgets/generics/tables/table_representation.dart';
@@ -7,8 +8,8 @@ import 'package:mobile_football/screens/grid_screens/teams_grid_screen.dart';
 import 'package:mobile_football/view_models/cells/league_cell_view_model.dart';
 import 'package:mobile_football/widgets/generics/cells/cell_representable.dart';
 
-class SeasonsGridScreen extends StatelessWidget {
-  const SeasonsGridScreen({
+class SeasonsTableScreen extends StatelessWidget {
+  const SeasonsTableScreen({
     super.key,
     required this.selectedItem,
   });
@@ -24,6 +25,16 @@ class SeasonsGridScreen extends StatelessWidget {
         content: (selectedItem as LeagueCellViewModel).seasons.map((season) => SeasonCellViewModel(season: season)).toList(),
       ),
       onSelection: (selectedSeason) {
+        /*
+        * Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => StandingTableScreen(
+              leagueId: selectedItem.id,
+              season: selectedSeason.id.toString(),
+            ),
+          ),
+        );*/
         Navigator.push(
           context,
           MaterialPageRoute(

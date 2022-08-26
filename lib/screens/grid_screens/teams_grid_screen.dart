@@ -37,6 +37,7 @@ class TeamsGridScreen extends StatelessWidget {
               loaderMessage: 'Getting all the teams from $title...',
               content: state.resources.map((team) => TeamCellViewModel(team: team)).toList(),
               onSelection: (_) {},
+              allowsMultipleSelection: true,
             );
           },
         ),

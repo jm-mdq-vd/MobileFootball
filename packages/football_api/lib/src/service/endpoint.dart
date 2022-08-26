@@ -6,6 +6,7 @@ enum Endpoint {
   teams,
   fixtures,
   venues,
+  standings
 }
 
 extension EndpointParse on Endpoint {
@@ -21,6 +22,8 @@ extension EndpointParse on Endpoint {
         return Fixture.fromJson;
       case Endpoint.venues:
         return Venue.fromJson;
+      case Endpoint.standings:
+        return Standing.fromJson;
     }
   }
 
@@ -36,6 +39,8 @@ extension EndpointParse on Endpoint {
         return 'fixtures';
       case Endpoint.venues:
         return 'venues';
+      case Endpoint.standings:
+        return 'standings';
     }
   }
 }

@@ -18,10 +18,12 @@ class GridScreen<Resource> extends StatelessWidget {
     this.onSelection,
     this.itemSpacing = 16,
     this.crossAxisCount = 2,
+    this.allowsMultipleSelection = false,
   });
 
   final String title;
   final String loaderMessage;
+  final bool allowsMultipleSelection;
   final ResourceState<Resource> state;
   final List<CellRepresentable> content;
   final Function(CellRepresentable selectedItem)? onSelection;
@@ -49,6 +51,7 @@ class GridScreen<Resource> extends StatelessWidget {
         itemSpacing: itemSpacing,
         crossAxisCount: crossAxisCount,
         onSelection: onSelection,
+        allowsMultipleSelection: allowsMultipleSelection,
       );
     }
 

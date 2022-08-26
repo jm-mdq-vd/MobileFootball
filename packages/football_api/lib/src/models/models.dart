@@ -9,5 +9,6 @@ export 'coverage/coverage.dart';
 export 'player/player_info.dart';
 export 'season/season.dart';
 export 'standing/team_standing.dart';
+export 'standing/standing.dart';
 export 'venue/venue.dart';
 export 'api_response.dart';

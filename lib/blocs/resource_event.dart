@@ -25,3 +25,10 @@ ResourceEvent<Team> getTeams(String league, String season) => ResourceEvent(
 ResourceEvent<CountryInfo> getCountries() => ResourceEvent(
   parameters: {},
 );
+
+ResourceEvent<StandingInfo> getStanding(String league, String season) => ResourceEvent(
+  parameters: {
+    'league': league,
+    'season': season,
+  },
+);
