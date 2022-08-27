@@ -25,20 +25,10 @@ class SeasonsTableScreen extends StatelessWidget {
         content: (selectedItem as LeagueCellViewModel).seasons.map((season) => SeasonCellViewModel(season: season)).toList(),
       ),
       onSelection: (selectedSeason) {
-        /*
-        * Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => StandingTableScreen(
-              leagueId: selectedItem.id,
-              season: selectedSeason.id.toString(),
-            ),
-          ),
-        );*/
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TeamsGridScreen(
+            builder: (context) => StandingTableScreen(
               title: selectedItem.title,
               leagueId: selectedItem.id,
               season: selectedSeason.id.toString(),

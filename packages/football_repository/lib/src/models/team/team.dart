@@ -3,16 +3,16 @@ import 'package:equatable/equatable.dart';
 class Team extends Equatable {
   Team({
     required this.id,
-    required this.stadiumId,
     required this.name,
     required this.logo,
-    required this.code,
-    required this.founded,
-    required this.stadiumName,
-    required this.city,
-    required this.address,
-    required this.stadiumCapacity,
-    required this.stadiumImage,
+    this.stadiumId = null,
+    this.code = null,
+    this.founded = null,
+    this.stadiumName = null,
+    this.city = null,
+    this.address = null,
+    this.stadiumCapacity = null,
+    this.stadiumImage = null,
   });
 
   final int id;

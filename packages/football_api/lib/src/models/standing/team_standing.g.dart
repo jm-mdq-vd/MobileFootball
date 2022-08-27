@@ -23,14 +23,16 @@ Map<String, dynamic> _$MatchesToJson(Matches instance) => <String, dynamic>{
 TeamStanding _$TeamStandingFromJson(Map<String, dynamic> json) => TeamStanding(
       rank: json['rank'] as int,
       points: json['points'] as int,
-      team: Team.fromJson(json['team'] as Map<String, dynamic>),
+      team: BasicTeamInfo.fromJson(json['team'] as Map<String, dynamic>),
       goalsDifference: json['goalsDiff'] as int,
       group: json['group'] as String?,
+      form: json['form'] as String?,
       status: json['status'] as String,
       description: json['description'] as String?,
       all: Matches.fromJson(json['all'] as Map<String, dynamic>),
       home: Matches.fromJson(json['home'] as Map<String, dynamic>),
       away: Matches.fromJson(json['away'] as Map<String, dynamic>),
+      update: json['update'] as String,
     );
 
 Map<String, dynamic> _$TeamStandingToJson(TeamStanding instance) =>
@@ -40,9 +42,11 @@ Map<String, dynamic> _$TeamStandingToJson(TeamStanding instance) =>
       'team': instance.team,
       'goalsDiff': instance.goalsDifference,
       'group': instance.group,
+      'form': instance.form,
       'status': instance.status,
       'description': instance.description,
       'all': instance.all,
       'home': instance.home,
       'away': instance.away,
+      'update': instance.update,
     };

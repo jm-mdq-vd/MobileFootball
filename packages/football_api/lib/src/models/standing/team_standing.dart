@@ -7,17 +7,17 @@ part 'team_standing.g.dart';
 
 @JsonSerializable()
 class Matches implements Deserializable {
-  final int played;
-  final int win;
-  final int draw;
-  final int lose;
-
   Matches({
     required this.played,
     required this.win,
     required this.draw,
     required this.lose,
   });
+
+  final int played;
+  final int win;
+  final int draw;
+  final int lose;
 
   factory Matches.fromJson(Map<String, dynamic> json) => _$MatchesFromJson(json);
 
@@ -71,30 +71,34 @@ class Matches implements Deserializable {
 //  },
 @JsonSerializable()
 class TeamStanding implements Deserializable {
-  final int rank;
-  final int points;
-  final Team team;
-  @JsonKey(name: 'goalsDiff')
-  final int goalsDifference;
-  final String? group;
-  final String status;
-  final String? description;
-  final Matches all;
-  final Matches home;
-  final Matches away;
-
   TeamStanding({
     required this.rank,
     required this.points,
     required this.team,
     required this.goalsDifference,
     required this.group,
+    required this.form,
     required this.status,
     required this.description,
     required this.all,
     required this.home,
     required this.away,
+    required this.update,
   });
+
+  final int rank;
+  final int points;
+  final BasicTeamInfo team;
+  @JsonKey(name: 'goalsDiff')
+  final int goalsDifference;
+  final String? group;
+  final String? form;
+  final String status;
+  final String? description;
+  final Matches all;
+  final Matches home;
+  final Matches away;
+  final String update;
 
   factory TeamStanding.fromJson(Map<String, dynamic> json) => _$TeamStandingFromJson(json);
 
