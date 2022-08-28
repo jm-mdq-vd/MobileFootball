@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 import 'cell_representable.dart';
-import '../../../utility/svg_provider.dart';
-import '../../../resources/local_assets.dart';
+import '../../../utility/network_image_provider.dart';
 
 class GridCell extends StatelessWidget {
   const GridCell({
@@ -25,13 +23,8 @@ class GridCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isSVG = model.imageURL.split('.').last == 'svg';
-    final image = isSVG ? SvgProvider.svgFromUrl(
-      model.imageURL,
-      placeholder: LocalAssets.countryPlaceholder,
-    ) : CachedNetworkImage(
-      imageUrl: model.imageURL,
-    );
+    final isSVG = NetworkImageProvider.isSvg(model.imageURL);
+    final image = NetworkImageProvider.image(model.imageURL);
 
     return Container(
       width: width,

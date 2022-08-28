@@ -125,10 +125,13 @@ class _GridState extends State<Grid> {
   }
 
   Widget _searchBar() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
+    return Container(
+      color: Colors.white,
       child: TextField(
-        decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Search ...'),
+        decoration: const InputDecoration(
+          hintText: 'Search ...',
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16,),
+        ),
         onChanged: (query) {
           print(query);
         },

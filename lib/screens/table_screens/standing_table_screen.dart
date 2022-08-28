@@ -76,51 +76,55 @@ class StandingTableScreen extends StatelessWidget {
           ),
           Column(
             children: state.resources.first.teams.map((team) {
-              return Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      team.rank.toString(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+              return GestureDetector(
+                onTap: () {
+                  print(team.team.id);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        team.rank.toString(),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 16,),
-                    Container(
-                      width: 24,
-                      height: 24,
-                      child: Image.network(team.team.logo,),
-                    ),
-                    SizedBox(width: 16,),
-                    _statusToIcon(team.status),
-                    SizedBox(width: 8,),
-                    Text(
-                      team.team.name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                      SizedBox(width: 16,),
+                      Container(
+                        width: 30,
+                        height: 30,
+                        child: Image.network(team.team.logo,),
                       ),
-                    ),
-                    Spacer(),
-                    Text(
-                      team.points.toString(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                      SizedBox(width: 16,),
+                      _statusToIcon(team.status),
+                      SizedBox(width: 8,),
+                      Text(
+                        team.team.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                      Spacer(),
+                      Text(
+                        team.points.toString(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             }).toList(),
-            //separatorBuilder: (_, __) => Container(height: 1, color: Colors.grey,),
           ),
         ]
       );
     }
 
-    return ScreenLoader(message: 'Loading',);
+    return ScreenLoader(message: 'Loading standings for ${title}...',);
   }
 
   @override
