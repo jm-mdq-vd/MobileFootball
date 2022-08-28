@@ -49,48 +49,74 @@ class StandingTableScreen extends StatelessWidget {
         return const NoResults();
       }
 
-      return ListView.separated(
-        itemCount: state.resources.first.teams.length,
-        itemBuilder: (context, index) {
-          return Padding(
+      return ListView(
+        children: [
+          Container(
             padding: const EdgeInsets.all(16),
+            height: 60,
+            color: Color(0xFFC9C7C7),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  state.resources.first.teams[index].rank.toString(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(width: 16,),
-                Container(
-                  width: 24,
-                  height: 24,
-                  child: Image.network(state.resources.first.teams[index].team.logo,),
-                ),
-                SizedBox(width: 16,),
-                _statusToIcon(state.resources.first.teams[index].status),
-                SizedBox(width: 8,),
-                Text(
-                  state.resources.first.teams[index].team.name,
+                  'Club',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Spacer(),
                 Text(
-                  state.resources.first.teams[index].points.toString(),
+                  'Pts',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
-          );
-        },
-        separatorBuilder: (_, __) => Container(height: 1, color: Colors.grey,),
+          ),
+          Column(
+            children: state.resources.first.teams.map((team) {
+              return Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      team.rank.toString(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(width: 16,),
+                    Container(
+                      width: 24,
+                      height: 24,
+                      child: Image.network(team.team.logo,),
+                    ),
+                    SizedBox(width: 16,),
+                    _statusToIcon(team.status),
+                    SizedBox(width: 8,),
+                    Text(
+                      team.team.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Spacer(),
+                    Text(
+                      team.points.toString(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+            //separatorBuilder: (_, __) => Container(height: 1, color: Colors.grey,),
+          ),
+        ]
       );
     }
 

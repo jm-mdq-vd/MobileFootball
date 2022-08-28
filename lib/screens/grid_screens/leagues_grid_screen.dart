@@ -32,8 +32,8 @@ class LeaguesGridScreen extends StatelessWidget {
           builder: (context, state) {
             return GridScreen<League>(
               state: state,
-              title: '$title\'s Leagues',
-              loaderMessage: 'Getting all the leagues from $title...',
+              title: '$title\'s Leagues & Cups',
+              loaderMessage: 'Getting all the leagues and cups from $title...',
               content: state.resources.map((league) => LeagueCellViewModel(league: league)).toList(),
               onSelection: (selectedItem) {
                 Navigator.push(
