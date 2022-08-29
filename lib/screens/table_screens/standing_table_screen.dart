@@ -1,3 +1,5 @@
+import 'dart:developer' as devlog;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:football_repository/football_repository.dart';
@@ -51,69 +53,53 @@ class StandingTableScreen extends StatelessWidget {
 
       return ListView(
         children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            height: 60,
-            color: Color(0xFFC9C7C7),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'Club',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Spacer(),
-                Text(
-                  'Pts',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          StandingsHeader(),
           Column(
             children: state.resources.first.teams.map((team) {
+              final index = state.resources.first.teams.indexOf(team);
+              devlog.log('$index');
               return GestureDetector(
                 onTap: () {
                   print(team.team.id);
                 },
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  color: index % 2 == 0 ? Color(0xFFF6F6F6) : Color(0xFFE2E1E1),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text(
-                        team.rank.toString(),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(width: 16,),
+                      BoldText(team.rank.toString(),),
+                      const SizedBox(width: 16,),
                       Container(
                         width: 30,
                         height: 30,
                         child: Image.network(team.team.logo,),
                       ),
-                      SizedBox(width: 16,),
+                      const SizedBox(width: 16,),
                       _statusToIcon(team.status),
-                      SizedBox(width: 8,),
-                      Text(
-                        team.team.name,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      const SizedBox(width: 8,),
+                      FittedBox(
+                        child: BoldText(team.team.name,),
                       ),
-                      Spacer(),
-                      Text(
-                        team.points.toString(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      const Spacer(),
+                      const Spacer(),
+                      const Spacer(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const SizedBox(width: 16,),
+                          BoldText(team.results.played.toString(),),
+                          const SizedBox(width: 16,),
+                          BoldText(team.results.win.toString(),),
+                          const SizedBox(width: 16,),
+                          BoldText(team.results.draw.toString(),),
+                          const SizedBox(width: 16,),
+                          BoldText(team.results.lose.toString(),),
+                          const SizedBox(width: 16,),
+                        ],
                       ),
+                      const SizedBox(width: 24,),
+                      BoldText(team.points.toString(),),
                     ],
                   ),
                 ),
@@ -148,6 +134,87 @@ class StandingTableScreen extends StatelessWidget {
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+class StandingsHeader extends StatelessWidget {
+  const StandingsHeader({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          height: 60,
+          color: Color(0xFFF6F6F6),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const UnderlinedBoldText('CLUB',),
+              const Spacer(),
+              const Spacer(),
+              const Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const SizedBox(width: 16,),
+                  const UnderlinedBoldText('J',),
+                  const SizedBox(width: 16,),
+                  const UnderlinedBoldText('G',),
+                  const SizedBox(width: 16,),
+                  const UnderlinedBoldText('E',),
+                  const SizedBox(width: 16,),
+                  const UnderlinedBoldText('P',),
+                  const SizedBox(width: 16,),
+                ],
+              ),
+              const SizedBox(width: 24,),
+              const UnderlinedBoldText('PTS',),
+            ],
+          ),
+        ),
+        Container(height: 1, color: Colors.grey,)
+      ],
+    );
+  }
+}
+
+class UnderlinedBoldText extends StatelessWidget {
+  const UnderlinedBoldText(this.data, {super.key,});
+
+  final String data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      data,
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        decoration: TextDecoration.underline,
+        overflow: TextOverflow.fade,
+      ),
+    );
+  }
+}
+
+class BoldText extends StatelessWidget {
+  const BoldText(this.data, {super.key,});
+
+  final String data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      data,
+      textAlign: TextAlign.end,
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        overflow: TextOverflow.fade,
       ),
     );
   }

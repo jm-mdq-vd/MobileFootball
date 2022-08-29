@@ -15,8 +15,6 @@ class StandingsRepository implements Repository<StandingInfo> {
   final ApiClient _client;
 
   Future<List<StandingInfo>> getResource(Map<String, dynamic> parameters) async {
-    final List<StandingInfo>? cachedInfo = CacheRepository.shared.getResponseFromEndpoint(Endpoint.standings, parameters,);
-    if (cachedInfo != null) return cachedInfo;
     final response = await _client.getResponseFromEndpoint(
       Endpoint.standings,
       parameters,
@@ -41,16 +39,16 @@ class StandingsRepository implements Repository<StandingInfo> {
             logo: team.team.logo,
           ),
           status: StatusX.from(team.status),
+          results: MatchesResult(
+            played: team.all.played,
+            win: team.all.win,
+            draw: team.all.draw,
+            lose: team.all.lose,
+          ),
         )).toList(),
       );
     }).toList();
 
-
-    CacheRepository.shared.saveValueForEndpoint(
-      Endpoint.standings,
-      parameters,
-      list,
-    );
     return list;
   }
 }

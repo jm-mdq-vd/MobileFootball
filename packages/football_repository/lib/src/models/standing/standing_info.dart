@@ -50,20 +50,50 @@ extension StringToStatusForm on String {
   }
 }
 
-class GeneralTeamInfo {
+class MatchesResult extends Equatable {
+  MatchesResult({
+    required this.played,
+    required this.win,
+    required this.draw,
+    required this.lose,
+  });
+
+  final int played;
+  final int win;
+  final int draw;
+  final int lose;
+
+  @override
+  List<Object> get props => [
+    played,
+    win,
+    draw,
+    lose,
+  ];
+}
+
+class GeneralTeamInfo extends Equatable {
   GeneralTeamInfo({
     required this.rank,
     required this.points,
     required this.team,
     required this.status,
-    // required this.form,
+    required this.results,
   });
 
   final int rank;
   final int points;
   final Team team;
-  // final List<StatusForm> form;
   final Status status;
+  final MatchesResult results;
+
+  @override
+  List<Object> get props => [
+    rank,
+    points,
+    team,
+    status,
+  ];
 }
 
 class StandingInfo extends Equatable {
