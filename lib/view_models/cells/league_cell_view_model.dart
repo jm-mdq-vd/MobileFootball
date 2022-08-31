@@ -19,5 +19,7 @@ class LeagueCellViewModel implements CellRepresentable {
   @override
   String get imageURL => league.logo;
 
+  bool get isCup => league.isCup;
+
   List<LeagueSeason> get seasons => league.seasons;
 }

@@ -1,5 +1,3 @@
-import 'dart:developer' as devlog;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:football_repository/football_repository.dart';
@@ -8,6 +6,8 @@ import 'package:mobile_football/blocs/resource_bloc.dart';
 import 'package:mobile_football/blocs/resource_status.dart';
 import 'package:mobile_football/widgets/generics/loaders/screen_loader.dart';
 import 'package:mobile_football/widgets/generics/messages/no_results.dart';
+import 'package:mobile_football/widgets/texts/texts.dart';
+import 'package:mobile_football/view_models/team_rank_row_view_model.dart';
 
 class StandingTableScreen extends StatelessWidget {
   const StandingTableScreen({
@@ -21,26 +21,6 @@ class StandingTableScreen extends StatelessWidget {
   final String leagueId;
   final String season;
 
-  Icon _statusToIcon(Status status) {
-    switch (status) {
-      case Status.same:
-        return Icon(
-          Icons.remove,
-          color: Colors.grey,
-        );
-      case Status.up:
-        return Icon(
-          Icons.arrow_drop_up,
-          color: Colors.green,
-        );
-      case Status.down:
-        return Icon(
-          Icons.arrow_drop_down,
-          color: Colors.red,
-        );
-    }
-  }
-
   Widget _widgetForState(ResourceState<StandingInfo> state) {
     if (state.status.isLoading) {
       return ScreenLoader(message: 'Loading',);
@@ -51,62 +31,69 @@ class StandingTableScreen extends StatelessWidget {
         return const NoResults();
       }
 
-      return ListView(
-        children: [
-          StandingsHeader(),
-          Column(
-            children: state.resources.first.teams.map((team) {
-              final index = state.resources.first.teams.indexOf(team);
-              devlog.log('$index');
-              return GestureDetector(
-                onTap: () {
-                  print(team.team.id);
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  color: index % 2 == 0 ? Color(0xFFF6F6F6) : Color(0xFFE2E1E1),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      BoldText(team.rank.toString(),),
-                      const SizedBox(width: 16,),
-                      Container(
-                        width: 30,
-                        height: 30,
-                        child: Image.network(team.team.logo,),
-                      ),
-                      const SizedBox(width: 16,),
-                      _statusToIcon(team.status),
-                      const SizedBox(width: 8,),
-                      FittedBox(
-                        child: BoldText(team.team.name,),
-                      ),
-                      const Spacer(),
-                      const Spacer(),
-                      const Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          const SizedBox(width: 16,),
-                          BoldText(team.results.played.toString(),),
-                          const SizedBox(width: 16,),
-                          BoldText(team.results.win.toString(),),
-                          const SizedBox(width: 16,),
-                          BoldText(team.results.draw.toString(),),
-                          const SizedBox(width: 16,),
-                          BoldText(team.results.lose.toString(),),
-                          const SizedBox(width: 16,),
-                        ],
-                      ),
-                      const SizedBox(width: 24,),
-                      BoldText(team.points.toString(),),
+      return Container(
+        color: Color(0xFFDCDCDC),
+        child: ListView(
+          children: [
+            SizedBox(height: 80,),
+            StandingsHeader(title: title,),
+            Column(
+              children: state.resources.first.teams.map((team) {
+                final index = state.resources.first.teams.indexOf(team);
+                return RankRow(
+                  representation: TeamRankRowViewModel(team: team),
+                  index: index,
+                );
+              }).toList(),
+            ),
+            Container(height: 1, color: Colors.grey,),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 24
+              ),
+              height: 108,
+              decoration: BoxDecoration(
+                color: Color(0xFFF6F6F6),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(16),
+                  bottomRight: Radius.circular(16),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      BoldText('J: Partidos Jugados'),
+                      SizedBox(height: 16,),
+                      BoldText('G: Ganados'),
                     ],
                   ),
-                ),
-              );
-            }).toList(),
-          ),
-        ]
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      BoldText('E: Empates'),
+                      SizedBox(height: 16,),
+                      BoldText('P: Perdidos'),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      BoldText('PTS: Puntos'),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ]
+        ),
       );
     }
 
@@ -142,7 +129,10 @@ class StandingTableScreen extends StatelessWidget {
 class StandingsHeader extends StatelessWidget {
   const StandingsHeader({
     Key? key,
+    required this.title,
   }) : super(key: key);
+
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -150,31 +140,50 @@ class StandingsHeader extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(8),
-          height: 60,
-          color: Color(0xFFF6F6F6),
+          height: 50,
+          decoration: BoxDecoration(
+            color: Color(0xFFF6F6F6),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
+            ),
+          ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              const UnderlinedBoldText('CLUB',),
-              const Spacer(),
-              const Spacer(),
-              const Spacer(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const SizedBox(width: 16,),
-                  const UnderlinedBoldText('J',),
-                  const SizedBox(width: 16,),
-                  const UnderlinedBoldText('G',),
-                  const SizedBox(width: 16,),
-                  const UnderlinedBoldText('E',),
-                  const SizedBox(width: 16,),
-                  const UnderlinedBoldText('P',),
-                  const SizedBox(width: 16,),
-                ],
+              Container(
+                width: 214,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
+                    ),
+                    SizedBox(height: 4,),
+                    const UnderlinedBoldText('CLUB',),
+                  ],
+                ),
               ),
-              const SizedBox(width: 24,),
-              const UnderlinedBoldText('PTS',),
+              Container(
+                width: 120,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const UnderlinedBoldText('J',),
+                    const UnderlinedBoldText('G',),
+                    const UnderlinedBoldText('E',),
+                    const UnderlinedBoldText('P',),
+                  ],
+                ),
+              ),
+              Container(
+                width: 30,
+                child: const UnderlinedBoldText('PTS',),
+              ),
             ],
           ),
         ),
@@ -184,38 +193,84 @@ class StandingsHeader extends StatelessWidget {
   }
 }
 
-class UnderlinedBoldText extends StatelessWidget {
-  const UnderlinedBoldText(this.data, {super.key,});
+class RankRow extends StatelessWidget {
+  const RankRow({
+    super.key,
+    required this.representation,
+    required this.index,
+  });
 
-  final String data;
+  final int index;
+  final RankRowRepresentable representation;
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      data,
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        decoration: TextDecoration.underline,
-        overflow: TextOverflow.fade,
+    return GestureDetector(
+      onTap: () {
+        print(representation.id);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        color: index % 2 == 0 ? Color(0xFFF6F6F6) : Color(0xFFE2E1E1),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Container(
+              width: 18,
+              child: BoldText(representation.rank,),
+            ),
+            Container(
+              width: 30,
+              height: 30,
+              child: Image.network(representation.logo,),
+            ),
+            _statusToIcon(representation.status),
+            Container(
+              width: 100,
+              child: BoldText(representation.name,),
+            ),
+            Container(
+              width: 120,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  BoldText(representation.played,),
+                  BoldText(representation.win,),
+                  BoldText(representation.draw,),
+                  BoldText(representation.lose,),
+                ],
+              ),
+            ),
+            Container(
+              width: 30,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: BoldText(representation.points,),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
-}
 
-class BoldText extends StatelessWidget {
-  const BoldText(this.data, {super.key,});
-
-  final String data;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      data,
-      textAlign: TextAlign.end,
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        overflow: TextOverflow.fade,
-      ),
-    );
+  Icon _statusToIcon(Status status) {
+    switch (status) {
+      case Status.same:
+        return Icon(
+          Icons.remove,
+          color: Colors.grey,
+        );
+      case Status.up:
+        return Icon(
+          Icons.arrow_drop_up,
+          color: Colors.green,
+        );
+      case Status.down:
+        return Icon(
+          Icons.arrow_drop_down,
+          color: Colors.red,
+        );
+    }
   }
 }

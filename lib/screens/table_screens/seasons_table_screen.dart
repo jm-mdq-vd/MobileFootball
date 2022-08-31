@@ -28,11 +28,21 @@ class SeasonsTableScreen extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => StandingTableScreen(
-              title: selectedItem.title,
-              leagueId: selectedItem.id,
-              season: selectedSeason.id.toString(),
-            ),
+            builder: (context) {
+              if ((selectedItem as LeagueCellViewModel).isCup) {
+                return TeamsGridScreen(
+                  title: selectedItem.title,
+                  leagueId: selectedItem.id,
+                  season: selectedSeason.id.toString(),
+                );
+              }
+
+              return StandingTableScreen(
+                title: selectedItem.title,
+                leagueId: selectedItem.id,
+                season: selectedSeason.id.toString(),
+              );
+            },
           ),
         );
       },

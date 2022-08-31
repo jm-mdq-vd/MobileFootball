@@ -9,6 +9,7 @@ class League extends Equatable {
     required this.logo,
     required this.country,
     required this.seasons,
+    required this.isCup,
   });
 
   final int id;
@@ -16,6 +17,7 @@ class League extends Equatable {
   final String logo;
   final String country;
   final List<LeagueSeason> seasons;
+  final bool isCup;
 
   @override
   List<Object> get props => [

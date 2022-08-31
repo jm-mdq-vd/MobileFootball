@@ -22,13 +22,15 @@ class LeagueRepository implements Repository<League> {
     final response = await _client.getResponseFromEndpoint(Endpoint.leagues, parameters,);
     final leaguesInfo = response.response.castToType<LeagueInfo>();
 
-    var leagues = leaguesInfo.map((leagueInfo) {
+    var leagues = leaguesInfo
+        .map((leagueInfo) {
       leagueInfo.seasons.sort((left, right) => right.year.compareTo(left.year));
       return League(
         id: leagueInfo.league.id,
         name: leagueInfo.league.name,
         logo: leagueInfo.league.logo,
         country: leagueInfo.country.name,
+        isCup: leagueInfo.league.type == 'Cup',
         seasons: leagueInfo.seasons.map((season) {
           return LeagueSeason(
             year: season.year,
