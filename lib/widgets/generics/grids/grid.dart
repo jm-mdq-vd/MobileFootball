@@ -103,14 +103,18 @@ class _GridState extends State<Grid> {
                       if (mounted) {
                         setState(() {
                           _selectedIndex = index;
-                          _indexesOfSelectedItems.add(index);
+                          if (_indexesOfSelectedItems.contains(index)) {
+                            _indexesOfSelectedItems.remove(index);
+                          } else {
+                            _indexesOfSelectedItems.add(index);
+                          }
                         });
                         widget.itemSelectedAtIndex(index);
                       }
                     },
                     child: GridCell(
                       model: widget.itemAtIndex(index),
-                      isSelected: widget.allowsMultipleSelection ? _indexesOfSelectedItems.contains(index) : _selectedIndex == index,
+                      isSelected: _indexesOfSelectedItems.contains(index),
                       width: (context.width / widget.crossAxisCount) -
                           (widget.itemSpacing * widget.crossAxisCount),
                     ),
