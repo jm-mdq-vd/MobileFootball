@@ -22,6 +22,12 @@ ResourceEvent<Team> getTeams(String league, String season) => ResourceEvent(
   },
 );
 
+ResourceEvent<Team> getTeamWithId(String id) => ResourceEvent(
+  parameters: {
+    'id': id,
+  },
+);
+
 ResourceEvent<CountryInfo> getCountries() => ResourceEvent(
   parameters: {},
 );

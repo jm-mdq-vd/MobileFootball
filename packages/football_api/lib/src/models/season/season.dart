@@ -4,7 +4,7 @@ import '../../interfaces/deserializable.dart';
 
 part 'season.g.dart';
 
-/// {
+// {
 //      "year": 2022,
 //      "start": "2022-02-12",
 //      "end": "2022-10-01",

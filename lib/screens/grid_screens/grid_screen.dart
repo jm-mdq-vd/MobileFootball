@@ -19,6 +19,7 @@ class GridScreen<Resource> extends StatelessWidget {
     this.itemSpacing = 16,
     this.crossAxisCount = 2,
     this.allowsMultipleSelection = false,
+    this.hasSearchBar = true,
   });
 
   final String title;
@@ -27,6 +28,7 @@ class GridScreen<Resource> extends StatelessWidget {
   final ResourceState<Resource> state;
   final List<CellRepresentable> content;
   final Function(CellRepresentable selectedItem)? onSelection;
+  final bool hasSearchBar;
 
   final double itemSpacing;
   final int crossAxisCount;
@@ -46,7 +48,13 @@ class GridScreen<Resource> extends StatelessWidget {
         title: title,
         content: content,
       );
-      return Grid(
+      return hasSearchBar ? SearchGrid(
+        representation: gridRepresentation,
+        itemSpacing: itemSpacing,
+        crossAxisCount: crossAxisCount,
+        onSelection: onSelection,
+        allowsMultipleSelection: allowsMultipleSelection,
+      ) : Grid(
         representation: gridRepresentation,
         itemSpacing: itemSpacing,
         crossAxisCount: crossAxisCount,

@@ -4,13 +4,19 @@ import 'package:football_repository/football_repository.dart';
 
 import 'package:mobile_football/blocs/resource_status.dart';
 import 'package:mobile_football/blocs/resource_bloc.dart';
+import 'package:mobile_football/navigation/app_coordinator.dart';
 import 'package:mobile_football/view_models/cells/country_cell_view_model.dart';
 
 import 'grid_screen.dart';
 import 'leagues_grid_screen.dart';
 
 class CountriesGridScreen extends StatelessWidget {
-  const CountriesGridScreen({super.key});
+  const CountriesGridScreen({
+    super.key,
+    AppCoordinator? coordinator = null,
+  }) : _coordinator = coordinator;
+
+  final AppCoordinator? _coordinator;
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +37,9 @@ class CountriesGridScreen extends StatelessWidget {
               itemSpacing: 8,
               crossAxisCount: 3,
               onSelection: (selectedItem) {
-                Navigator.push(
+                _coordinator?.goToLeaguesForCountry(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => LeaguesGridScreen(
-                      title: selectedItem.title,
-                      country: selectedItem.id,
-                    ),
-                  ),
+                  selectedItem,
                 );
               },
             );

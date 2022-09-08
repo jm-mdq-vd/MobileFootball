@@ -4,6 +4,7 @@ import 'package:football_repository/football_repository.dart';
 
 import 'package:mobile_football/blocs/resource_status.dart';
 import 'package:mobile_football/blocs/resource_bloc.dart';
+import 'package:mobile_football/navigation/app_coordinator.dart';
 import 'package:mobile_football/view_models/cells/league_cell_view_model.dart';
 
 import 'grid_screen.dart';
@@ -14,10 +15,12 @@ class LeaguesGridScreen extends StatelessWidget {
     super.key,
     required this.title,
     required this.country,
-  });
+    AppCoordinator? coordinator = null,
+  }) : _coordinator = coordinator;
 
   final String title;
   final String country;
+  final AppCoordinator? _coordinator;
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +39,9 @@ class LeaguesGridScreen extends StatelessWidget {
               loaderMessage: 'Getting all the leagues and cups from $title...',
               content: state.resources.map((league) => LeagueCellViewModel(league: league)).toList(),
               onSelection: (selectedItem) {
-                Navigator.push(
+                _coordinator?.goToSeasons(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return SeasonsTableScreen(selectedItem: selectedItem,);
-                    },
-                  ),
+                  selectedItem,
                 );
               },
             );

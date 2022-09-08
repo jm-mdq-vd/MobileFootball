@@ -4,22 +4,27 @@ import 'package:football_repository/football_repository.dart';
 
 import 'package:mobile_football/blocs/resource_bloc.dart';
 import 'package:mobile_football/blocs/resource_status.dart';
+import 'package:mobile_football/navigation/app_coordinator.dart';
 import 'package:mobile_football/widgets/generics/loaders/screen_loader.dart';
 import 'package:mobile_football/widgets/generics/messages/no_results.dart';
 import 'package:mobile_football/widgets/texts/texts.dart';
+import 'package:mobile_football/screens/details/team_details_screen.dart';
 import 'package:mobile_football/view_models/team_rank_row_view_model.dart';
 
 class StandingTableScreen extends StatelessWidget {
-  const StandingTableScreen({
+  StandingTableScreen({
     super.key,
     required this.title,
     required this.leagueId,
     required this.season,
-  });
+    AppCoordinator? coordinator,
+  }) : _coordinator = coordinator;
 
   final String title;
   final String leagueId;
   final String season;
+
+  AppCoordinator? _coordinator;
 
   Widget _widgetForState(ResourceState<StandingInfo> state) {
     if (state.status.isLoading) {
@@ -43,6 +48,7 @@ class StandingTableScreen extends StatelessWidget {
                 return RankRow(
                   representation: TeamRankRowViewModel(team: team),
                   index: index,
+                  coordinator: _coordinator,
                 );
               }).toList(),
             ),
@@ -110,14 +116,8 @@ class StandingTableScreen extends StatelessWidget {
         )..add(getStanding(leagueId, season)),
         child: BlocBuilder<ResourceBloc<StandingInfo>, ResourceState<StandingInfo>>(
           builder: (context, state) {
-            return Scaffold(
-              appBar: AppBar(
-                title: Text(title),
-                backgroundColor: Colors.black,
-              ),
-              body: Container(
-                child: _widgetForState(state),
-              ),
+            return Container(
+              child: _widgetForState(state),
             );
           },
         ),
@@ -194,62 +194,79 @@ class StandingsHeader extends StatelessWidget {
 }
 
 class RankRow extends StatelessWidget {
-  const RankRow({
+  RankRow({
     super.key,
     required this.representation,
     required this.index,
-  });
+    AppCoordinator? coordinator,
+  }) : _coordinator = coordinator;
 
   final int index;
   final RankRowRepresentable representation;
 
+  AppCoordinator? _coordinator;
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        print(representation.id);
-      },
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        color: index % 2 == 0 ? Color(0xFFF6F6F6) : Color(0xFFE2E1E1),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Container(
-              width: 18,
-              child: BoldText(representation.rank,),
-            ),
-            Container(
-              width: 30,
-              height: 30,
-              child: Image.network(representation.logo,),
-            ),
-            _statusToIcon(representation.status),
-            Container(
-              width: 100,
-              child: BoldText(representation.name,),
-            ),
-            Container(
-              width: 120,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  BoldText(representation.played,),
-                  BoldText(representation.win,),
-                  BoldText(representation.draw,),
-                  BoldText(representation.lose,),
-                ],
+    return Container(
+      padding: const EdgeInsets.all(8),
+      color: index % 2 == 0 ? Color(0xFFF6F6F6) : Color(0xFFE2E1E1),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Container(
+            width: 18,
+            child: BoldText(representation.rank,),
+          ),
+          Container(
+            width: 30,
+            height: 30,
+            child: Image.network(representation.logo,),
+          ),
+          _statusToIcon(representation.status),
+          Container(
+            width: 100,
+            child: GestureDetector(
+              onTap: () {
+                print(_coordinator);
+                print(representation.id);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TeamDetailScreen(id: representation.id),
+                  ),
+                );
+              },
+              child: Text(
+                representation.name,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  overflow: TextOverflow.fade,
+                  color: Colors.blue,
+                ),
               ),
             ),
-            Container(
-              width: 30,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: BoldText(representation.points,),
-              ),
+          ),
+          Container(
+            width: 120,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                BoldText(representation.played,),
+                BoldText(representation.win,),
+                BoldText(representation.draw,),
+                BoldText(representation.lose,),
+              ],
             ),
-          ],
-        ),
+          ),
+          Container(
+            width: 30,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: BoldText(representation.points,),
+            ),
+          ),
+        ],
       ),
     );
   }

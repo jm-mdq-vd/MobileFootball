@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_football/screens/table_screens/standing_table_screen.dart';
 
+import 'package:mobile_football/navigation/app_coordinator.dart';
 import 'package:mobile_football/view_models/cells/season_cell_view_model.dart';
 import 'package:mobile_football/widgets/generics/tables/table_representation.dart';
 import 'package:mobile_football/widgets/generics/tables/unordered_list.dart';
-import 'package:mobile_football/screens/grid_screens/teams_grid_screen.dart';
 import 'package:mobile_football/view_models/cells/league_cell_view_model.dart';
 import 'package:mobile_football/widgets/generics/cells/cell_representable.dart';
 
@@ -12,9 +11,11 @@ class SeasonsTableScreen extends StatelessWidget {
   const SeasonsTableScreen({
     super.key,
     required this.selectedItem,
-  });
+    AppCoordinator? coordinator = null,
+  }) : _coordinator = coordinator;
 
   final CellRepresentable selectedItem;
+  final AppCoordinator? _coordinator;
 
   @override
   Widget build(BuildContext context) {
@@ -25,25 +26,11 @@ class SeasonsTableScreen extends StatelessWidget {
         content: (selectedItem as LeagueCellViewModel).seasons.map((season) => SeasonCellViewModel(season: season)).toList(),
       ),
       onSelection: (selectedSeason) {
-        Navigator.push(
+        _coordinator?.goToMainSeason(
           context,
-          MaterialPageRoute(
-            builder: (context) {
-              if ((selectedItem as LeagueCellViewModel).isCup) {
-                return TeamsGridScreen(
-                  title: selectedItem.title,
-                  leagueId: selectedItem.id,
-                  season: selectedSeason.id.toString(),
-                );
-              }
-
-              return StandingTableScreen(
-                title: selectedItem.title,
-                leagueId: selectedItem.id,
-                season: selectedSeason.id.toString(),
-              );
-            },
-          ),
+          selectedItem,
+          selectedSeason,
+            (selectedItem as LeagueCellViewModel).isCup,
         );
       },
     );

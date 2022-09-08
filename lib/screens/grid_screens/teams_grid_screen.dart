@@ -4,21 +4,28 @@ import 'package:football_repository/football_repository.dart';
 
 import 'package:mobile_football/blocs/resource_status.dart';
 import 'package:mobile_football/blocs/resource_bloc.dart';
+import 'package:mobile_football/navigation/app_coordinator.dart';
+import 'package:mobile_football/screens/details/team_details_screen.dart';
 import 'package:mobile_football/view_models/cells/team_cell_view_model.dart';
 
 import 'grid_screen.dart';
 
 class TeamsGridScreen extends StatelessWidget {
-  const TeamsGridScreen({
+  TeamsGridScreen({
     super.key,
     required this.title,
     required this.leagueId,
     required this.season,
+    this.hasSearchBar = true,
+    AppCoordinator? coordinator,
   });
 
   final String title;
   final String leagueId;
   final String season;
+  final bool hasSearchBar;
+
+  AppCoordinator? _coordinator;
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +43,18 @@ class TeamsGridScreen extends StatelessWidget {
               title: title,
               loaderMessage: 'Getting all the teams from $title...',
               content: state.resources.map((team) => TeamCellViewModel(team: team)).toList(),
-              onSelection: (_) {},
+              onSelection: (selectedTeam) {
+                print(_coordinator);
+                print(selectedTeam.id);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TeamDetailScreen(id: selectedTeam.id),
+                  ),
+                );
+              },
               allowsMultipleSelection: true,
+              hasSearchBar: hasSearchBar,
             );
           },
         ),

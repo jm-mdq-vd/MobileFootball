@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:mobile_football/navigation/app_coordinator.dart';
 import 'package:page_transition/page_transition.dart';
 
 import 'package:mobile_football/resources/local_assets.dart';
@@ -28,7 +29,7 @@ class MobileFootballApp extends StatelessWidget {
         splashIconSize: 400,
         duration: 1,
         pageTransitionType: PageTransitionType.fade,
-        nextScreen: CountriesGridScreen(),
+        nextScreen: CountriesGridScreen(coordinator: AppCoordinator(),),
       ),
     );
   }
