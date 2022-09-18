@@ -11,15 +11,15 @@ part 'country.g.dart';
 /// }
 @JsonSerializable()
 class Country implements Deserializable {
-  final String name;
-  final String? code;
-  final String? flag;
-
   Country({
     required this.name,
     required this.code,
     required this.flag,
   });
+
+  final String name;
+  final String? code;
+  final String? flag;
 
   factory Country.fromJson(Map<String, dynamic> json) => _$CountryFromJson(json);
 

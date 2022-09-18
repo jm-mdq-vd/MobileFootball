@@ -7,13 +7,13 @@ part 'event.g.dart';
 
 @JsonSerializable()
 class Time implements Deserializable {
-  final int? elapsed;
-  final int? extra;
-
   Time({
     required this.elapsed,
     required this.extra,
   });
+
+  final int? elapsed;
+  final int? extra;
 
   factory Time.fromJson(Map<String, dynamic> json) => _$TimeFromJson(json);
 

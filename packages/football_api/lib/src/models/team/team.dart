@@ -16,15 +16,15 @@ part 'team.g.dart';
 
 @JsonSerializable()
 class BasicTeamInfo implements Deserializable {
-  final int id;
-  final String name;
-  final String logo;
-
   BasicTeamInfo({
     required this.id,
     required this.name,
     required this.logo
   });
+
+  final int id;
+  final String name;
+  final String logo;
 
   factory BasicTeamInfo.fromJson(Map<String, dynamic> json) => _$BasicTeamInfoFromJson(json);
 
@@ -34,10 +34,6 @@ class BasicTeamInfo implements Deserializable {
 
 @JsonSerializable()
 class Team extends BasicTeamInfo implements Deserializable {
-  final String? code;
-  final String country;
-  final int? founded;
-
   Team({
     required super.id,
     required super.name,
@@ -46,6 +42,10 @@ class Team extends BasicTeamInfo implements Deserializable {
     required this.country,
     required this.founded,
   });
+
+  final String? code;
+  final String country;
+  final int? founded;
 
   factory Team.fromJson(Map<String, dynamic> json) => _$TeamFromJson(json);
 

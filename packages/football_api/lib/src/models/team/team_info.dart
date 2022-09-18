@@ -30,13 +30,13 @@ part 'team_info.g.dart';
 
 @JsonSerializable()
 class TeamInfo implements Deserializable {
-  final Team team;
-  final Venue venue;
-
   TeamInfo({
     required this.team,
     required this.venue,
   });
+
+  final Team team;
+  final Venue venue;
 
   factory TeamInfo.fromJson(Map<String, dynamic> json) => _$TeamInfoFromJson(json);
 

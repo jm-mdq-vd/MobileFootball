@@ -21,6 +21,26 @@ Map<String, dynamic> _$FixtureTeamToJson(FixtureTeam instance) =>
       'winner': instance.winner,
     };
 
+Teams _$TeamsFromJson(Map<String, dynamic> json) => Teams(
+      home: FixtureTeam.fromJson(json['home'] as Map<String, dynamic>),
+      away: FixtureTeam.fromJson(json['away'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$TeamsToJson(Teams instance) => <String, dynamic>{
+      'home': instance.home,
+      'away': instance.away,
+    };
+
+Goals _$GoalsFromJson(Map<String, dynamic> json) => Goals(
+      home: json['home'] as int,
+      away: json['away'] as int,
+    );
+
+Map<String, dynamic> _$GoalsToJson(Goals instance) => <String, dynamic>{
+      'home': instance.home,
+      'away': instance.away,
+    };
+
 Status _$StatusFromJson(Map<String, dynamic> json) => Status(
       long: json['long'] as String,
       short: json['short'] as String,
@@ -47,4 +67,17 @@ Map<String, dynamic> _$FixtureToJson(Fixture instance) => <String, dynamic>{
       'timezone': instance.timezone,
       'date': instance.date,
       'status': instance.status,
+    };
+
+FixturesInfo _$FixturesInfoFromJson(Map<String, dynamic> json) => FixturesInfo(
+      fixture: Fixture.fromJson(json['fixture'] as Map<String, dynamic>),
+      teams: Teams.fromJson(json['teams'] as Map<String, dynamic>),
+      goals: Goals.fromJson(json['goals'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$FixturesInfoToJson(FixturesInfo instance) =>
+    <String, dynamic>{
+      'fixture': instance.fixture,
+      'teams': instance.teams,
+      'goals': instance.goals,
     };

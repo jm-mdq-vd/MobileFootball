@@ -5,17 +5,17 @@ part 'coverage.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class FixturesCoverage implements Deserializable {
-  final bool events;
-  final bool lineups;
-  final bool statisticsFixtures;
-  final bool statisticsPlayers;
-
   FixturesCoverage({
     required this.events,
     required this.lineups,
     required this.statisticsFixtures,
     required this.statisticsPlayers,
   });
+
+  final bool events;
+  final bool lineups;
+  final bool statisticsFixtures;
+  final bool statisticsPlayers;
 
   factory FixturesCoverage.fromJson(Map<String, dynamic> json) => _$FixturesCoverageFromJson(json);
 
@@ -25,12 +25,6 @@ class FixturesCoverage implements Deserializable {
 
 @JsonSerializable()
 class Coverage implements Deserializable {
-  final FixturesCoverage fixtures;
-  final bool standings;
-  final bool players;
-  final bool predictions;
-  final bool odds;
-
   Coverage({
     required this.fixtures,
     required this.standings,
@@ -38,6 +32,12 @@ class Coverage implements Deserializable {
     required this.predictions,
     required this.odds,
   });
+
+  final FixturesCoverage fixtures;
+  final bool standings;
+  final bool players;
+  final bool predictions;
+  final bool odds;
 
   factory Coverage.fromJson(Map<String, dynamic> json) => _$CoverageFromJson(json);
 

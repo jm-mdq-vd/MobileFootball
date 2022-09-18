@@ -5,13 +5,6 @@ part 'venue.g.dart';
 
 @JsonSerializable()
 class Venue implements Deserializable {
-  final int? id;
-  final String? name;
-  final String? address;
-  final String? city;
-  final int? capacity;
-  final String? image;
-
   Venue({
     required this.id,
     required this.name,
@@ -20,6 +13,13 @@ class Venue implements Deserializable {
     required this.capacity,
     required this.image,
   });
+
+  final int? id;
+  final String? name;
+  final String? address;
+  final String? city;
+  final int? capacity;
+  final String? image;
 
   factory Venue.fromJson(Map<String, dynamic> json) => _$VenueFromJson(json);
 

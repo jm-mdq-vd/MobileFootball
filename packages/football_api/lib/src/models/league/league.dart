@@ -12,17 +12,17 @@ part 'league.g.dart';
 /// }
 @JsonSerializable()
 class League implements Deserializable {
-  final int id;
-  final String name;
-  final String type;
-  final String logo;
-
   League({
     required this.id,
     required this.name,
     required this.type,
     required this.logo,
   });
+
+  final int id;
+  final String name;
+  final String type;
+  final String logo;
 
   factory League.fromJson(Map<String, dynamic> json) => _$LeagueFromJson(json);
 

@@ -6,13 +6,13 @@ part 'api_response.g.dart';
 
 @JsonSerializable()
 class Paging implements Deserializable {
-  final int current;
-  final int total;
-
   Paging({
     required this.current,
     required this.total,
   });
+
+  final int current;
+  final int total;
 
   factory Paging.fromJson(Map<String, dynamic> json) => _$PagingFromJson(json);
 
@@ -21,17 +21,17 @@ class Paging implements Deserializable {
 }
 
 class APIResponse<T> {
-  final String get;
-  final int results;
-  final Paging paging;
-  List response;
-
   APIResponse({
     required this.get,
     required this.results,
     required this.paging,
     required this.response,
   });
+
+  final String get;
+  final int results;
+  final Paging paging;
+  List response;
 
   static APIResponse fromJson<T>(Map<String, dynamic> json, List<T> Function(List list) fromJson) {
     return APIResponse<T>(

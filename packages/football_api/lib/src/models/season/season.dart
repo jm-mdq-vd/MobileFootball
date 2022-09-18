@@ -28,12 +28,6 @@ part 'season.g.dart';
 //   }
 @JsonSerializable()
 class Season implements Deserializable {
-  final int year;
-  final String start;
-  final String end;
-  final bool current;
-  final Coverage coverage;
-
   Season({
     required this.year,
     required this.start,
@@ -41,6 +35,12 @@ class Season implements Deserializable {
     required this.current,
     required this.coverage,
   });
+
+  final int year;
+  final String start;
+  final String end;
+  final bool current;
+  final Coverage coverage;
 
   factory Season.fromJson(Map<String, dynamic> json) => _$SeasonFromJson(json);
 
