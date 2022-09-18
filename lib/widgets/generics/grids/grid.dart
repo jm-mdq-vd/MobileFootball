@@ -37,13 +37,11 @@ class SearchGrid extends StatefulWidget {
     this.onSelection = null,
     this.crossAxisCount = 2,
     this.itemSpacing = 16,
-    this.allowsMultipleSelection = false,
   });
 
   final GridRepresentation representation;
   final int crossAxisCount;
   final double itemSpacing;
-  final bool allowsMultipleSelection;
 
   final Function(CellRepresentable cell)? onSelection;
 
@@ -102,19 +100,18 @@ class _SearchGridState extends State<SearchGrid> {
                     onTap: () {
                       if (mounted) {
                         setState(() {
-                          _selectedIndex = index;
-                          if (_indexesOfSelectedItems.contains(index)) {
-                            _indexesOfSelectedItems.remove(index);
-                          } else {
-                            _indexesOfSelectedItems.add(index);
+                          if (_selectedIndex == index) {
+                            _selectedIndex = -1;
+                            return;
                           }
+                          _selectedIndex = index;
                         });
                         widget.itemSelectedAtIndex(index);
                       }
                     },
                     child: GridCell(
                       model: widget.itemAtIndex(index),
-                      isSelected: _indexesOfSelectedItems.contains(index),
+                      isSelected: _selectedIndex == index,
                       width: (context.width / widget.crossAxisCount) -
                           (widget.itemSpacing * widget.crossAxisCount),
                     ),
@@ -151,29 +148,27 @@ class Grid extends StatefulWidget {
     this.onSelection = null,
     this.crossAxisCount = 2,
     this.itemSpacing = 16,
-    this.allowsMultipleSelection = false,
   });
 
   final GridRepresentation representation;
   final int crossAxisCount;
   final double itemSpacing;
-  final bool allowsMultipleSelection;
 
   final Function(CellRepresentable cell)? onSelection;
 
-  String get title => representation.title;
-  int get itemCount => representation.content.length;
-  CellRepresentable itemAtIndex(int index) => representation.content[index];
+  String get _title => representation.title;
+  int get _itemCount => representation.content.length;
+  CellRepresentable _itemAtIndex(int index) => representation.content[index];
 
-  SliverGridDelegateWithFixedCrossAxisCount get delegate =>
+  SliverGridDelegateWithFixedCrossAxisCount get _delegate =>
       SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: crossAxisCount,
         mainAxisSpacing: itemSpacing,
         crossAxisSpacing: itemSpacing,
       );
 
-  void itemSelectedAtIndex(int index) {
-    final selectedCell = itemAtIndex(index);
+  void _itemSelectedAtIndex(int index) {
+    final selectedCell = _itemAtIndex(index);
     if (onSelection != null) {
       onSelection!(selectedCell);
     }
@@ -186,7 +181,6 @@ class Grid extends StatefulWidget {
 class _GridState extends State<Grid> {
   static const double _insets = 16.0;
 
-  List<int> _indexesOfSelectedItems = [];
   int _selectedIndex = -1;
 
   @override
@@ -203,26 +197,25 @@ class _GridState extends State<Grid> {
               scrollDirection: Axis.vertical,
               physics: NeverScrollableScrollPhysics(), // to disable GridView's scrolling
               shrinkWrap: true,
-              gridDelegate: widget.delegate,
-              itemCount: widget.itemCount,
+              gridDelegate: widget._delegate,
+              itemCount: widget._itemCount,
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   onTap: () {
                     if (mounted) {
                       setState(() {
-                        _selectedIndex = index;
-                        if (_indexesOfSelectedItems.contains(index)) {
-                          _indexesOfSelectedItems.remove(index);
-                        } else {
-                          _indexesOfSelectedItems.add(index);
+                        if (_selectedIndex == index) {
+                          _selectedIndex = -1;
+                          return;
                         }
+                        _selectedIndex = index;
                       });
-                      widget.itemSelectedAtIndex(index);
+                      widget._itemSelectedAtIndex(index);
                     }
                   },
                   child: GridCell(
-                    model: widget.itemAtIndex(index),
-                    isSelected: _indexesOfSelectedItems.contains(index),
+                    model: widget._itemAtIndex(index),
+                    isSelected: _selectedIndex == index,
                     width: (context.width / widget.crossAxisCount) -
                         (widget.itemSpacing * widget.crossAxisCount),
                   ),

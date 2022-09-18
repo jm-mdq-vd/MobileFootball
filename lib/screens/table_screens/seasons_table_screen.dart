@@ -26,6 +26,11 @@ class SeasonsTableScreen extends StatelessWidget {
         content: (selectedItem as LeagueCellViewModel).seasons.map((season) => SeasonCellViewModel(season: season)).toList(),
       ),
       onSelection: (selectedSeason) {
+        final season = selectedSeason as SeasonCellViewModel;
+        print('Events: ${season.showEvents}');
+        print('Lineups: ${season.showLineups}');
+        print('Fixtures Statistics: ${season.showFixturesStatistics}');
+        print('Players Statistics: ${season.showPlayersStatistics}');
         _coordinator?.goToMainSeason(
           context,
           selectedItem,

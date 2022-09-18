@@ -93,7 +93,7 @@ class TeamStanding implements Deserializable {
   final int goalsDifference;
   final String? group;
   final String? form;
-  final String status;
+  final String? status;
   final String? description;
   final Matches all;
   final Matches home;

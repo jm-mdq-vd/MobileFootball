@@ -41,12 +41,19 @@ class StandingTableScreen extends StatelessWidget {
         child: ListView(
           children: [
             SizedBox(height: 80,),
-            StandingsHeader(title: title,),
+            StandingsHeader(
+              title: title,
+              season: season,
+            ),
             Column(
               children: state.resources.first.teams.map((team) {
                 final index = state.resources.first.teams.indexOf(team);
                 return RankRow(
-                  representation: TeamRankRowViewModel(team: team),
+                  representation: TeamRankRowViewModel(
+                    team: team,
+                    leagueId: leagueId,
+                    seasonId: season,
+                  ),
                   index: index,
                   coordinator: _coordinator,
                 );
@@ -130,9 +137,11 @@ class StandingsHeader extends StatelessWidget {
   const StandingsHeader({
     Key? key,
     required this.title,
+    required this.season,
   }) : super(key: key);
 
   final String title;
+  final String season;
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +166,7 @@ class StandingsHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      title,
+                      '$title $season',
                       style: TextStyle(
                         color: Colors.grey,
                         fontSize: 12,
@@ -233,7 +242,11 @@ class RankRow extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TeamDetailScreen(id: representation.id),
+                    builder: (context) => TeamDetailScreen(
+                      id: representation.id,
+                      league: (representation as TeamRankRowViewModel).leagueId,
+                      season: (representation as TeamRankRowViewModel).seasonId,
+                    ),
                   ),
                 );
               },

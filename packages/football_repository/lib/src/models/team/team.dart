@@ -5,6 +5,7 @@ class Team extends Equatable {
     required this.id,
     required this.name,
     required this.logo,
+    required this.country,
     this.stadiumId = null,
     this.code = null,
     this.founded = null,
@@ -23,6 +24,7 @@ class Team extends Equatable {
   final int? founded;
   final String? stadiumName;
   final String? city;
+  final String country;
   final String? address;
   final int? stadiumCapacity;
   final String? stadiumImage;
@@ -32,5 +34,6 @@ class Team extends Equatable {
     id,
     name,
     logo,
+    country,
   ];
 }

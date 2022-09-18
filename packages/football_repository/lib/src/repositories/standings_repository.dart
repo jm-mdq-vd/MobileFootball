@@ -37,6 +37,7 @@ class StandingsRepository implements Repository<StandingInfo> {
             id: team.team.id,
             name: team.team.name,
             logo: team.team.logo,
+            country: '',
           ),
           status: StatusX.from(team.status),
           results: MatchesResult(

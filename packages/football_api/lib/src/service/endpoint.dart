@@ -1,9 +1,12 @@
+import 'package:football_api/src/models/team/team_statistics.dart';
+
 import '../models/models.dart';
 
 enum Endpoint {
   countries,
   leagues,
   teams,
+  teamStatistics,
   fixtures,
   venues,
   standings
@@ -18,6 +21,8 @@ extension EndpointParse on Endpoint {
         return LeagueInfo.fromJson;
       case Endpoint.teams:
         return TeamInfo.fromJson;
+      case Endpoint.teamStatistics:
+        return TeamStatistics.fromJson;
       case Endpoint.fixtures:
         return Fixture.fromJson;
       case Endpoint.venues:
@@ -35,6 +40,8 @@ extension EndpointParse on Endpoint {
         return 'leagues';
       case Endpoint.teams:
         return 'teams';
+      case Endpoint.teamStatistics:
+        return 'teams/statistics';
       case Endpoint.fixtures:
         return 'fixtures';
       case Endpoint.venues:

@@ -30,7 +30,7 @@ enum Status {
 }
 
 extension StatusX on Status {
-  static Status from(String status) {
+  static Status from(String? status) {
     switch (status) {
       case "same":
         return Status.same;
@@ -39,7 +39,7 @@ extension StatusX on Status {
       case "down":
         return Status.down;
       default:
-        throw 'Fatal error: Invalid string used to build an Status instance';
+        return Status.same;
     }
   }
 }

@@ -41,7 +41,7 @@ class TeamsGridScreen extends StatelessWidget {
             return GridScreen<Team>(
               state: state,
               title: title,
-              loaderMessage: 'Getting all the teams from $title...',
+              loaderMessage: 'Obteniendo todos los equipos de $title...',
               content: state.resources.map((team) => TeamCellViewModel(team: team)).toList(),
               onSelection: (selectedTeam) {
                 print(_coordinator);
@@ -49,7 +49,11 @@ class TeamsGridScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TeamDetailScreen(id: selectedTeam.id),
+                    builder: (context) => TeamDetailScreen(
+                      league: leagueId,
+                      season: season,
+                      id: selectedTeam.id,
+                    ),
                   ),
                 );
               },

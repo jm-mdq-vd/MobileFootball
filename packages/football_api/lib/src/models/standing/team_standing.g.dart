@@ -27,7 +27,7 @@ TeamStanding _$TeamStandingFromJson(Map<String, dynamic> json) => TeamStanding(
       goalsDifference: json['goalsDiff'] as int,
       group: json['group'] as String?,
       form: json['form'] as String?,
-      status: json['status'] as String,
+      status: json['status'] as String?,
       description: json['description'] as String?,
       all: Matches.fromJson(json['all'] as Map<String, dynamic>),
       home: Matches.fromJson(json['home'] as Map<String, dynamic>),

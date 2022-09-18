@@ -27,6 +27,7 @@ class TeamRepository implements Repository<Team> {
       founded: teamInfo.team.founded,
       stadiumName: teamInfo.venue.name,
       city: teamInfo.venue.city,
+      country: teamInfo.team.country,
       address: teamInfo.venue.address,
       stadiumCapacity: teamInfo.venue.capacity,
       stadiumImage: teamInfo.venue.image,

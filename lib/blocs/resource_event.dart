@@ -38,3 +38,11 @@ ResourceEvent<StandingInfo> getStanding(String league, String season) => Resourc
     'season': season,
   },
 );
+
+ResourceEvent<Statistics> getStatistics(String league, String season, String team) => ResourceEvent(
+    parameters: {
+      'league': league,
+      'season': season,
+      'team': team,
+    },
+);

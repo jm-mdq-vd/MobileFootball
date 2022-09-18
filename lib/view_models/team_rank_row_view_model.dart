@@ -14,8 +14,14 @@ abstract class RankRowRepresentable {
 }
 
 class TeamRankRowViewModel implements RankRowRepresentable {
-  TeamRankRowViewModel({required this.team});
+  TeamRankRowViewModel({
+    required this.team,
+    required this.leagueId,
+    required this.seasonId,
+  });
 
+  final String leagueId;
+  final String seasonId;
   final GeneralTeamInfo team;
 
   @override

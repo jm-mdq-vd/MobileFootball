@@ -9,9 +9,13 @@ import 'package:mobile_football/widgets/generics/loaders/screen_loader.dart';
 class TeamDetailScreen extends StatelessWidget {
   const TeamDetailScreen({
     super.key,
+    required this.league,
+    required this.season,
     required this.id,
   });
 
+  final String league;
+  final String season;
   final String id;
 
   Widget _buildScreen(BuildContext context, ResourceState<Team> state) {
@@ -29,11 +33,87 @@ class TeamDetailScreen extends StatelessWidget {
         body: Container(
           color: Colors.white,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 height: 300,
+                color: Colors.black,
                 width: MediaQuery.of(context).size.width,
                 child: Image.network(team.stadiumImage ?? ''),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 360,
+                          child: Text(
+                            team.stadiumName ?? '',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.fade,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 30,
+                          height: 30,
+                          child: Image.network(team.logo),
+                        )
+                      ],
+                    ),
+                    Text(
+                      team.city ?? '',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TeamDetailText('Fundado en el año ${team.founded}',),
+                    const SizedBox(height: 8,),
+                    TeamDetailText('Dirección del estadio: ${team.address}',),
+                    const SizedBox(height: 8,),
+                    TeamDetailText('Capacidad del estadio: ${team.stadiumCapacity} Personas',),
+                    const SizedBox(height: 8,),
+                    Row(
+                      children: [
+                        TeamDetailText('Pais: ${team.country}',),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              RepositoryProvider<StatisticsRepository>(
+                create: (context) => StatisticsRepository(null),
+                child: BlocProvider<ResourceBloc<Statistics>>(
+                  create: (context) => ResourceBloc(
+                    repository: context.read<StatisticsRepository>(),
+                  )..add(getStatistics(league, season, id)),
+                  child: BlocBuilder<ResourceBloc<Statistics>, ResourceState<Statistics>>(
+                    builder: (context, state) {
+                      print(state.resources);
+                      return Container(
+                        child: Center(
+                          child: const CircularProgressIndicator(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
             ],
           ),
@@ -56,6 +136,23 @@ class TeamDetailScreen extends StatelessWidget {
           buildWhen: (_, current) => current.status.isSuccess,
           builder: (context, state) => _buildScreen(context, state),
         ),
+      ),
+    );
+  }
+}
+
+class TeamDetailText extends StatelessWidget {
+  const TeamDetailText(this.data, {super.key,});
+
+  final String data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      data,
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
       ),
     );
   }

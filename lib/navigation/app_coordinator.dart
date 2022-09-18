@@ -49,12 +49,14 @@ class AppCoordinator {
     );
   }
 
+  /*
   void goToTeam(BuildContext context, String id) {
     _pushScreen(
       context,
       TeamDetailScreen(id: id),
     );
   }
+   */
 
   void _pushScreen(BuildContext context, Widget screen) {
     Navigator.push(

@@ -53,13 +53,11 @@ class GridScreen<Resource> extends StatelessWidget {
         itemSpacing: itemSpacing,
         crossAxisCount: crossAxisCount,
         onSelection: onSelection,
-        allowsMultipleSelection: allowsMultipleSelection,
       ) : Grid(
         representation: gridRepresentation,
         itemSpacing: itemSpacing,
         crossAxisCount: crossAxisCount,
         onSelection: onSelection,
-        allowsMultipleSelection: allowsMultipleSelection,
       );
     }
 
