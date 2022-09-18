@@ -16,7 +16,7 @@ class FixtureTeam implements Deserializable {
   final int id;
   final String name;
   final String logo;
-  final bool winner;
+  final bool? winner;
 
   factory FixtureTeam.fromJson(Map<String, dynamic> json) => _$FixtureTeamFromJson(json);
 
@@ -47,13 +47,37 @@ class Goals implements Deserializable {
     required this.away,
   });
 
-  final int home;
-  final int away;
+  final int? home;
+  final int? away;
 
   factory Goals.fromJson(Map<String, dynamic> json) => _$GoalsFromJson(json);
 
   @override
   Goals Function(Map<String, dynamic> object) get deserialize => Goals.fromJson;
+}
+
+@JsonSerializable()
+class FixtureLeague implements Deserializable {
+  FixtureLeague({
+    required this.id,
+    required this.name,
+    required this.country,
+    required this.logo,
+    required this.flag,
+    required this.round,
+  });
+
+  final int id;
+  final String name;
+  final String country;
+  final String logo;
+  final String flag;
+  final String round;
+
+  factory FixtureLeague.fromJson(Map<String, dynamic> json) => _$FixtureLeagueFromJson(json);
+
+  @override
+  FixtureLeague Function(Map<String, dynamic> object) get deserialize => FixtureLeague.fromJson;
 }
 
 @JsonSerializable()
@@ -66,7 +90,7 @@ class Status implements Deserializable {
 
   final String long;
   final String short;
-  final int elapsed;
+  final int? elapsed;
 
   factory Status.fromJson(Map<String, dynamic> json) => _$StatusFromJson(json);
 
@@ -79,14 +103,12 @@ class Fixture implements Deserializable {
   Fixture({
     required this.id,
     required this.referee,
-    required this.timezone,
     required this.date,
     required this.status,
   });
 
   final int id;
-  final String referee;
-  final String timezone;
+  final String? referee;
   final String date;
   final Status status;
 
@@ -100,11 +122,13 @@ class Fixture implements Deserializable {
 class FixturesInfo implements Deserializable {
   FixturesInfo({
     required this.fixture,
+    required this.league,
     required this.teams,
     required this.goals,
   });
 
   final Fixture fixture;
+  final FixtureLeague league;
   final Teams teams;
   final Goals goals;
 

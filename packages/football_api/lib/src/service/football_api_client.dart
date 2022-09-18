@@ -123,6 +123,7 @@ class FootballAPIClient implements ApiClient {
     if (streamedResponse.statusCode == 200) {
       final response = await http.Response.fromStream(streamedResponse);
       final decodedJson = jsonDecode(response.body);
+      print(response.body);
       return APIResponse.fromJson(decodedJson, fromJson);
     } else {
       throw ServiceError(streamedResponse.statusCode);

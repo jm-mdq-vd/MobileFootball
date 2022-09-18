@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:mobile_football/navigation/app_coordinator.dart';
 import 'package:mobile_football/screens/grid_screens/teams_grid_screen.dart';
 import 'package:mobile_football/screens/table_screens/standing_table_screen.dart';
+import 'package:mobile_football/screens/table_screens/match_table_screen.dart';
 
 class MainSeasonTabScreen extends StatefulWidget {
-  MainSeasonTabScreen({
+  const MainSeasonTabScreen({
     super.key,
     required this.isCup,
     required this.title,
@@ -19,7 +20,7 @@ class MainSeasonTabScreen extends StatefulWidget {
   final String season;
   final bool isCup;
 
-  AppCoordinator? _coordinator;
+  final AppCoordinator? _coordinator;
 
   @override
   State<MainSeasonTabScreen> createState() => _MainSeasonTabScreenState();
@@ -32,9 +33,7 @@ class _MainSeasonTabScreenState extends State<MainSeasonTabScreen> with SingleTi
   void initState() {
     super.initState();
 
-    print(widget._coordinator);
-
-    final length = !widget.isCup ? 2 : 1;
+    final length = !widget.isCup ? 3 : 2;
     _controller = TabController(length: length, vsync: this);
     _controller.addListener(() {
       setState(() {});
@@ -52,6 +51,7 @@ class _MainSeasonTabScreenState extends State<MainSeasonTabScreen> with SingleTi
           indicatorColor: Colors.white,
           tabs: [
             Tab(text: 'EQUIPOS',),
+            Tab(text: 'PARTIDOS',),
             if (!widget.isCup) Tab(text: 'POSICIONES',),
           ],
         ),
@@ -65,6 +65,11 @@ class _MainSeasonTabScreenState extends State<MainSeasonTabScreen> with SingleTi
             season: widget.season.toString(),
             hasSearchBar: false,
             coordinator: widget._coordinator,
+          ),
+          MatchTableScreen(
+            title: widget.title,
+            leagueId: widget.leagueId,
+            season: widget.season,
           ),
           if (!widget.isCup)
             StandingTableScreen(

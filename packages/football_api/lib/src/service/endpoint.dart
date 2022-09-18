@@ -24,7 +24,7 @@ extension EndpointParse on Endpoint {
       case Endpoint.teamStatistics:
         return TeamStatistics.fromJson;
       case Endpoint.fixtures:
-        return Fixture.fromJson;
+        return FixturesInfo.fromJson;
       case Endpoint.venues:
         return Venue.fromJson;
       case Endpoint.standings:

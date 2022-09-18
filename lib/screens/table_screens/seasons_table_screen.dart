@@ -22,15 +22,10 @@ class SeasonsTableScreen extends StatelessWidget {
     return UnorderedList(
       representation: TableRepresentation(
         id: selectedItem.id,
-        title: '${selectedItem.title} Seasons',
+        title: '${selectedItem.title} Temporadas',
         content: (selectedItem as LeagueCellViewModel).seasons.map((season) => SeasonCellViewModel(season: season)).toList(),
       ),
       onSelection: (selectedSeason) {
-        final season = selectedSeason as SeasonCellViewModel;
-        print('Events: ${season.showEvents}');
-        print('Lineups: ${season.showLineups}');
-        print('Fixtures Statistics: ${season.showFixturesStatistics}');
-        print('Players Statistics: ${season.showPlayersStatistics}');
         _coordinator?.goToMainSeason(
           context,
           selectedItem,

@@ -27,10 +27,10 @@ class UnorderedList extends StatefulWidget {
   }
 
   @override
-  State<UnorderedList> createState() => _TableState();
+  State<UnorderedList> createState() => _UnorderedListState();
 }
 
-class _TableState extends State<UnorderedList> {
+class _UnorderedListState extends State<UnorderedList> {
   int _selectedIndex = -1;
 
   @override

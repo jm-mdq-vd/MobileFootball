@@ -40,9 +40,23 @@ ResourceEvent<StandingInfo> getStanding(String league, String season) => Resourc
 );
 
 ResourceEvent<Statistics> getStatistics(String league, String season, String team) => ResourceEvent(
-    parameters: {
-      'league': league,
-      'season': season,
-      'team': team,
-    },
+  parameters: {
+    'league': league,
+    'season': season,
+    'team': team,
+  },
+);
+
+ResourceEvent<MatchFixture> getFixturesByTeam(String teamId, String season) => ResourceEvent(
+  parameters: {
+    'team': teamId,
+    'season': season,
+  }
+);
+
+ResourceEvent<MatchFixture> getFixturesByLeague(String leagueId, String season) => ResourceEvent(
+  parameters: {
+    'league': leagueId,
+    'season': season,
+  }
 );

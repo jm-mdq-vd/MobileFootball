@@ -5,6 +5,7 @@ import 'package:football_repository/football_repository.dart';
 import 'package:mobile_football/blocs/resource_bloc.dart';
 import 'package:mobile_football/blocs/resource_status.dart';
 import 'package:mobile_football/widgets/generics/loaders/screen_loader.dart';
+import 'package:mobile_football/utility/network_image_provider.dart';
 
 class TeamDetailScreen extends StatelessWidget {
   const TeamDetailScreen({
@@ -39,7 +40,7 @@ class TeamDetailScreen extends StatelessWidget {
                 height: 300,
                 color: Colors.black,
                 width: MediaQuery.of(context).size.width,
-                child: Image.network(team.stadiumImage ?? ''),
+                child: NetworkImageProvider.image(team.stadiumImage ?? ''),
               ),
               Padding(
                 padding: const EdgeInsets.all(8),
