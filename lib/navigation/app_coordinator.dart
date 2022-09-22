@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:mobile_football/screens/grid_screens/countries_grid_screen.dart';
 import 'package:mobile_football/screens/grid_screens/leagues_grid_screen.dart';
+import 'package:mobile_football/screens/screen_requirements.dart';
 import 'package:mobile_football/screens/table_screens/seasons_table_screen.dart';
 import 'package:mobile_football/screens/main_screens/main_season_tabs_screen.dart';
-import 'package:mobile_football/screens/details/team_details_screen.dart';
 import 'package:mobile_football/widgets/generics/cells/cell_representable.dart';
 
 class AppCoordinator {
@@ -19,19 +19,12 @@ class AppCoordinator {
     _pushScreen(
       context,
       LeaguesGridScreen(
-        title: country.title,
-        country: country.id,
-        coordinator: this,
-      ),
-    );
-  }
-
-  void goToSeasons(BuildContext context, CellRepresentable league) {
-    _pushScreen(
-      context,
-      SeasonsTableScreen(
-        selectedItem: league,
-        coordinator: this,
+        requirements: LeaguesGridScreenRequirements(
+          values: {
+            LeaguesGridScreenRequirements.titleKey: country.title,
+            LeaguesGridScreenRequirements.countryKey: country.id,
+          }
+        ),
       ),
     );
   }
@@ -41,22 +34,16 @@ class AppCoordinator {
       context,
       MainSeasonTabScreen(
         isCup: isCup,
-        title: league.title,
-        leagueId: league.id,
-        season: season.id.toString(),
-        coordinator: this,
+        requirements: LeagueSeasonRequirements(
+          values: {
+            LeagueSeasonRequirements.titleKey: league.title,
+            LeagueSeasonRequirements.leagueKey: league.id,
+            LeagueSeasonRequirements.seasonKey: season.id.toString(),
+          }
+        ),
       ),
     );
   }
-
-  /*
-  void goToTeam(BuildContext context, String id) {
-    _pushScreen(
-      context,
-      TeamDetailScreen(id: id),
-    );
-  }
-   */
 
   void _pushScreen(BuildContext context, Widget screen) {
     Navigator.push(

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-class MatchTeam extends Equatable {
-  MatchTeam({
+class FixtureTeamInfo extends Equatable {
+  FixtureTeamInfo({
     required this.id,
     required this.name,
     required this.logo,
@@ -25,8 +25,8 @@ class MatchTeam extends Equatable {
   ];
 }
 
-class MatchFixture extends Equatable {
-  MatchFixture({
+class Fixture extends Equatable {
+  Fixture({
     required this.id,
     required this.referee,
     required this.date,
@@ -35,6 +35,7 @@ class MatchFixture extends Equatable {
     required this.round,
     required this.home,
     required this.away,
+    required this.stadium,
   });
 
   final int id;
@@ -43,8 +44,9 @@ class MatchFixture extends Equatable {
   final int elapsedTime;
   final String leagueName;
   final String round;
-  final MatchTeam home;
-  final MatchTeam away;
+  final FixtureTeamInfo home;
+  final FixtureTeamInfo away;
+  final String stadium;
 
 
   @override
@@ -56,5 +58,6 @@ class MatchFixture extends Equatable {
     round,
     home,
     away,
+    stadium,
   ];
 }

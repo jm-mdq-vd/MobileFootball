@@ -3,30 +3,28 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:football_repository/football_repository.dart';
 
 import 'package:mobile_football/blocs/resource_bloc.dart';
+import 'package:mobile_football/utility/extensions/date_extension.dart';
 import 'package:mobile_football/utility/network_image_provider.dart';
 import 'package:mobile_football/screens/resource_status_screen.dart';
+import 'package:mobile_football/screens/screen_requirements.dart';
 
-class MatchTableScreen extends StatelessWidget {
-  const MatchTableScreen({
+class FixtureTableScreen extends StatelessWidget {
+  const FixtureTableScreen({
     super.key,
-    required this.title,
-    required this.leagueId,
-    required this.season,
-  });
+    required LeagueSeasonRequirements requirements,
+  }) : _requirements = requirements;
 
-  final String title;
-  final String leagueId;
-  final String season;
+  final LeagueSeasonRequirements _requirements;
 
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider<FixtureRepository>(
       create: (context) => FixtureRepository(null),
-      child: BlocProvider<ResourceBloc<MatchFixture>>(
+      child: BlocProvider<ResourceBloc<Fixture>>(
         create: (context) => ResourceBloc(
           repository: context.read<FixtureRepository>(),
-        )..add(getFixturesByLeague(leagueId, season)),
-        child: BlocBuilder<ResourceBloc<MatchFixture>, ResourceState<MatchFixture>>(
+        )..add(getFixturesByLeague(_requirements.leagueId, _requirements.season)),
+        child: BlocBuilder<ResourceBloc<Fixture>, ResourceState<Fixture>>(
           builder: (context, state) {
             return ResourceStatusScreen(
               state: state,
@@ -74,6 +72,11 @@ class _MatchTableState extends State<MatchTable> {
           color: const Color(0xB9EEECEC),
           child: Column(
             children: [
+              Container(
+                color: Color(0xFFE2E1E1),
+                height: 50,
+              ),
+              SizedBox(height: 8,),
               Expanded(
                 child: ListView.builder(
                   itemBuilder: (context, index) {
@@ -98,15 +101,16 @@ class _MatchTableState extends State<MatchTable> {
 class MatchCellRepresentation {
   MatchCellRepresentation({required this.fixture});
 
-  final MatchFixture fixture;
+  final Fixture fixture;
 
   String get referee => fixture.referee ?? 'No Disponible';
   DateTime get date => fixture.date;
   String get leagueName => fixture.leagueName;
-  MatchTeam get home => fixture.home;
-  MatchTeam get away => fixture.away;
+  FixtureTeamInfo get home => fixture.home;
+  FixtureTeamInfo get away => fixture.away;
   String get homeTeamGoals => fixture.home.goals != -1 ? fixture.home.goals.toString() : '-';
   String get awayTeamGoals => fixture.away.goals != -1 ? fixture.away.goals.toString() : '-';
+  String get stadium => fixture.stadium;
 }
 
 class MatchCell extends StatelessWidget {
@@ -134,54 +138,66 @@ class MatchCell extends StatelessWidget {
         ]
       ),
       child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Row(
+        padding: const EdgeInsets.all(2),
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            TeamView(team: representation.home),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            Text(
+              representation.stadium,
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.grey,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  representation.leagueName,
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: Colors.grey,
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                TeamView(team: representation.home),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      representation.homeTeamGoals,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(width: 16,),
-                    Text(
-                      'VS',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    SizedBox(width: 16,),
-                    Text(
-                      representation.awayTeamGoals,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          representation.homeTeamGoals,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(width: 16,),
+                        Text(
+                          'VS',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(width: 16,),
+                        Text(
+                          representation.awayTeamGoals,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
+                TeamView(team: representation.away),
               ],
             ),
-            TeamView(team: representation.away),
+            Text(
+              'Fecha: ${representation.date.dayMonthYear}',
+              style: TextStyle(
+                fontSize: 10,
+                color: Colors.grey,
+              ),
+            ),
           ],
         ),
       ),
@@ -195,7 +211,7 @@ class TeamView extends StatelessWidget {
     required this.team,
   }) : super(key: key);
 
-  final MatchTeam team;
+  final FixtureTeamInfo team;
 
   @override
   Widget build(BuildContext context) {
@@ -205,8 +221,8 @@ class TeamView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 70,
-            height: 70,
+            width: 50,
+            height: 50,
             child: NetworkImageProvider.image(team.logo,),
           ),
           SizedBox(height: 8,),

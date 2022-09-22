@@ -78,6 +78,7 @@ Fixture _$FixtureFromJson(Map<String, dynamic> json) => Fixture(
       referee: json['referee'] as String?,
       date: json['date'] as String,
       status: Status.fromJson(json['status'] as Map<String, dynamic>),
+      venue: BaseVenue.fromJson(json['venue'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$FixtureToJson(Fixture instance) => <String, dynamic>{
@@ -85,6 +86,7 @@ Map<String, dynamic> _$FixtureToJson(Fixture instance) => <String, dynamic>{
       'referee': instance.referee,
       'date': instance.date,
       'status': instance.status,
+      'venue': instance.venue,
     };
 
 FixturesInfo _$FixturesInfoFromJson(Map<String, dynamic> json) => FixturesInfo(

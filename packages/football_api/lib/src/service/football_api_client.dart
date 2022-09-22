@@ -11,6 +11,20 @@ extension DateHelpers on DateTime {
     final now = DateTime.now();
     return now.day == day && now.month == month && now.year == year;
   }
+
+  bool get isYesterday {
+    final now = DateTime.now();
+    return (now.day - 1) == day && now.month == month && now.year == year;
+  }
+
+  bool get isTomorrow {
+    final now = DateTime.now();
+    return (now.day + 1) == day && now.month == month && now.year == year;
+  }
+
+  bool get isTodayOrClosest {
+    return isToday || isYesterday || isTomorrow;
+  }
 }
 
 enum APIStatusCode {

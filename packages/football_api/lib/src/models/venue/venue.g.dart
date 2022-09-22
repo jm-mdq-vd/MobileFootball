@@ -6,6 +6,16 @@ part of 'venue.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+BaseVenue _$BaseVenueFromJson(Map<String, dynamic> json) => BaseVenue(
+      id: json['id'] as int?,
+      name: json['name'] as String?,
+    );
+
+Map<String, dynamic> _$BaseVenueToJson(BaseVenue instance) => <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+    };
+
 Venue _$VenueFromJson(Map<String, dynamic> json) => Venue(
       id: json['id'] as int?,
       name: json['name'] as String?,

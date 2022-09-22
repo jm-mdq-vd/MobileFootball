@@ -31,8 +31,8 @@ class CountriesGridScreen extends StatelessWidget {
           builder: (context, state) {
             return GridScreen<CountryInfo>(
               state: state,
-              title: 'Countries',
-              loaderMessage: 'Getting all the available countries...',
+              title: 'Seleccionar Pais',
+              loaderMessage: 'Obteniendo todos los paises disponibles...',
               content: state.resources.map((country) => CountryCellViewModel(country: country)).toList(),
               itemSpacing: 8,
               crossAxisCount: 3,

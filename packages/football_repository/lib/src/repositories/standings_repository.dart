@@ -22,7 +22,7 @@ class StandingsRepository implements Repository<StandingInfo> {
 
     final standings = response.response.castToType<Standing>();
     List<StandingInfo> list = standings.map((standing) {
-      final teams = standing.league.standings.expand((list) => list).toList();
+      final teams = standing.league.standings.first;
       return StandingInfo(
         id: standing.league.id,
         name: standing.league.name,

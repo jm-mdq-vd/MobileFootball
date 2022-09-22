@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import '../../interfaces/deserializable.dart';
+import '../venue/venue.dart';
 
 part 'fixture.g.dart';
 
@@ -105,12 +106,14 @@ class Fixture implements Deserializable {
     required this.referee,
     required this.date,
     required this.status,
+    required this.venue,
   });
 
   final int id;
   final String? referee;
   final String date;
   final Status status;
+  final BaseVenue venue;
 
   factory Fixture.fromJson(Map<String, dynamic> json) => _$FixtureFromJson(json);
 

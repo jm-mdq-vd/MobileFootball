@@ -47,14 +47,14 @@ ResourceEvent<Statistics> getStatistics(String league, String season, String tea
   },
 );
 
-ResourceEvent<MatchFixture> getFixturesByTeam(String teamId, String season) => ResourceEvent(
+ResourceEvent<Fixture> getFixturesByTeam(String teamId, String season) => ResourceEvent(
   parameters: {
     'team': teamId,
     'season': season,
   }
 );
 
-ResourceEvent<MatchFixture> getFixturesByLeague(String leagueId, String season) => ResourceEvent(
+ResourceEvent<Fixture> getFixturesByLeague(String leagueId, String season) => ResourceEvent(
   parameters: {
     'league': leagueId,
     'season': season,

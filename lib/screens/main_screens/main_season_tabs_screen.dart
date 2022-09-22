@@ -3,24 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:mobile_football/navigation/app_coordinator.dart';
 import 'package:mobile_football/screens/grid_screens/teams_grid_screen.dart';
 import 'package:mobile_football/screens/table_screens/standing_table_screen.dart';
-import 'package:mobile_football/screens/table_screens/match_table_screen.dart';
+import 'package:mobile_football/screens/table_screens/fixture_table_screen.dart';
+import 'package:mobile_football/screens/screen_requirements.dart';
 
 class MainSeasonTabScreen extends StatefulWidget {
   const MainSeasonTabScreen({
     super.key,
+    required LeagueSeasonRequirements requirements,
     required this.isCup,
-    required this.title,
-    required this.leagueId,
-    required this.season,
-    AppCoordinator? coordinator,
-  }) : _coordinator = coordinator;
+  }) : _requirements = requirements;
 
-  final String title;
-  final String leagueId;
-  final String season;
+  final LeagueSeasonRequirements _requirements;
   final bool isCup;
-
-  final AppCoordinator? _coordinator;
 
   @override
   State<MainSeasonTabScreen> createState() => _MainSeasonTabScreenState();
@@ -44,7 +38,7 @@ class _MainSeasonTabScreenState extends State<MainSeasonTabScreen> with SingleTi
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget._requirements.title),
         backgroundColor: Colors.black,
         bottom: TabBar(
           controller: _controller,
@@ -60,24 +54,12 @@ class _MainSeasonTabScreenState extends State<MainSeasonTabScreen> with SingleTi
         controller: _controller,
         children: [
           TeamsGridScreen(
-            title: widget.title,
-            leagueId: widget.leagueId,
-            season: widget.season.toString(),
+            requirements: widget._requirements,
             hasSearchBar: false,
-            coordinator: widget._coordinator,
           ),
-          MatchTableScreen(
-            title: widget.title,
-            leagueId: widget.leagueId,
-            season: widget.season,
-          ),
+          FixtureTableScreen(requirements: widget._requirements,),
           if (!widget.isCup)
-            StandingTableScreen(
-              title: widget.title,
-              leagueId: widget.leagueId,
-              season: widget.season,
-              coordinator: widget._coordinator,
-            ),
+            StandingTableScreen(requirements: widget._requirements,),
         ],
       ),
     );

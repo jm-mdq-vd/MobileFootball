@@ -130,7 +130,7 @@ class _SearchGridState extends State<SearchGrid> {
       color: Colors.white,
       child: TextField(
         decoration: const InputDecoration(
-          hintText: 'Search ...',
+          hintText: 'Buscar ...',
           contentPadding: const EdgeInsets.symmetric(horizontal: 16,),
         ),
         onChanged: (query) {

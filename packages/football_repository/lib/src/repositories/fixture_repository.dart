@@ -1,43 +1,46 @@
-import 'package:football_api/football_api.dart';
+import 'package:football_api/football_api.dart' hide Fixture;
 import 'package:football_repository/src/extensions/list_extension.dart';
 
 import 'repository.dart';
-import '../models/fixtures/match_fixture.dart';
+import '../models/fixtures/fixture.dart';
 
-class FixtureRepository implements Repository<MatchFixture> {
+class FixtureRepository implements Repository<Fixture> {
   FixtureRepository(ApiClient? client)
       : _client = client != null ? client : FootballAPIClient.shared;
 
   final ApiClient _client;
 
-  Future<List<MatchFixture>> getResource(Map<String, dynamic> parameters) async {
+  Future<List<Fixture>> getResource(Map<String, dynamic> parameters) async {
     final response = await _client.getResponseFromEndpoint(
       Endpoint.fixtures,
       parameters,
     );
     final parsedResponse = response.response.castToType<FixturesInfo>();
-    var fixtures = parsedResponse.map((fixtures) {
-      return MatchFixture(
-        id: fixtures.fixture.id,
-        referee: fixtures.fixture.referee,
-        date: DateTime.parse(fixtures.fixture.date),
-        elapsedTime: fixtures.fixture.status.elapsed ?? 0,
-        leagueName: fixtures.league.name,
-        round: fixtures.league.round,
-        home: MatchTeam(
-          id: fixtures.teams.home.id,
-          name: fixtures.teams.home.name,
-          logo: fixtures.teams.home.logo,
-          winner: fixtures.teams.home.winner ?? false,
-          goals: fixtures.goals.home ?? -1,
+    var fixtures = parsedResponse
+        .where((fixture) => DateTime.parse(fixture.fixture.date).isTodayOrClosest)
+        .map((fixture) {
+      return Fixture(
+        id: fixture.fixture.id,
+        referee: fixture.fixture.referee,
+        date: DateTime.parse(fixture.fixture.date),
+        elapsedTime: fixture.fixture.status.elapsed ?? 0,
+        leagueName: fixture.league.name,
+        round: fixture.league.round,
+        home: FixtureTeamInfo(
+          id: fixture.teams.home.id,
+          name: fixture.teams.home.name,
+          logo: fixture.teams.home.logo,
+          winner: fixture.teams.home.winner ?? false,
+          goals: fixture.goals.home ?? -1,
         ),
-        away: MatchTeam(
-          id: fixtures.teams.away.id,
-          name: fixtures.teams.away.name,
-          logo: fixtures.teams.away.logo,
-          winner: fixtures.teams.away.winner ?? false,
-          goals: fixtures.goals.away ?? -1,
+        away: FixtureTeamInfo(
+          id: fixture.teams.away.id,
+          name: fixture.teams.away.name,
+          logo: fixture.teams.away.logo,
+          winner: fixture.teams.away.winner ?? false,
+          goals: fixture.goals.away ?? -1,
         ),
+        stadium: fixture.fixture.venue.name ?? 'No Disponible',
       );
     }).toList();
     return fixtures;

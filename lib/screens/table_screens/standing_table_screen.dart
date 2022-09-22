@@ -4,32 +4,23 @@ import 'package:football_repository/football_repository.dart';
 
 import 'package:mobile_football/blocs/resource_bloc.dart';
 import 'package:mobile_football/blocs/resource_status.dart';
-import 'package:mobile_football/navigation/app_coordinator.dart';
 import 'package:mobile_football/widgets/generics/loaders/screen_loader.dart';
 import 'package:mobile_football/widgets/generics/messages/no_results.dart';
 import 'package:mobile_football/widgets/texts/texts.dart';
 import 'package:mobile_football/screens/details/team_details_screen.dart';
 import 'package:mobile_football/view_models/team_rank_row_view_model.dart';
 import 'package:mobile_football/utility/network_image_provider.dart';
-import 'package:mobile_football/screens/resource_status_screen.dart';
+import 'package:mobile_football/screens/screen_requirements.dart';
 
 class StandingTableScreen extends StatelessWidget {
-  StandingTableScreen({
+  const StandingTableScreen({
     super.key,
-    required this.title,
-    required this.leagueId,
-    required this.season,
-    AppCoordinator? coordinator,
-  }) : _coordinator = coordinator;
+    required LeagueSeasonRequirements requirements,
+  }) : _requirements = requirements;
 
-  final String title;
-  final String leagueId;
-  final String season;
-
-  AppCoordinator? _coordinator;
+  final LeagueSeasonRequirements _requirements;
 
   Widget _widgetForState(ResourceState<StandingInfo> state) {
-    /*
     if (state.status.isLoading) {
       return ScreenLoader(message: 'Cargando Posiciones...',);
     }
@@ -45,8 +36,8 @@ class StandingTableScreen extends StatelessWidget {
           children: [
             SizedBox(height: 80,),
             StandingsHeader(
-              title: title,
-              season: season,
+              title: _requirements.title,
+              season: _requirements.season,
             ),
             Column(
               children: state.resources.first.teams.map((team) {
@@ -54,11 +45,10 @@ class StandingTableScreen extends StatelessWidget {
                 return RankRow(
                   representation: TeamRankRowViewModel(
                     team: team,
-                    leagueId: leagueId,
-                    seasonId: season,
+                    leagueId: _requirements.leagueId,
+                    seasonId: _requirements.season,
                   ),
                   index: index,
-                  coordinator: _coordinator,
                 );
               }).toList(),
             ),
@@ -113,9 +103,7 @@ class StandingTableScreen extends StatelessWidget {
       );
     }
 
-    return ScreenLoader(message: 'Loading standings for ${title}...',);
-     */
-    return Container();
+    return ScreenLoader(message: 'Cargando posiciones para ${_requirements.title}...',);
   }
 
   @override
@@ -125,86 +113,9 @@ class StandingTableScreen extends StatelessWidget {
       child: BlocProvider<ResourceBloc<StandingInfo>>(
         create: (context) => ResourceBloc(
           repository: context.read<StandingsRepository>(),
-        )..add(getStanding(leagueId, season)),
+        )..add(getStanding(_requirements.leagueId, _requirements.season)),
         child: BlocBuilder<ResourceBloc<StandingInfo>, ResourceState<StandingInfo>>(
-          builder: (context, state) {
-            return ResourceStatusScreen(
-              state: state,
-              loaderMessage: 'Cargando posiciones de ${title}...',
-              successWidget: Container(
-                color: Color(0xFFDCDCDC),
-                child: ListView(
-                    children: [
-                      SizedBox(height: 80,),
-                      StandingsHeader(
-                        title: title,
-                        season: season,
-                      ),
-                      Column(
-                        children: state.resources.first.teams.map((team) {
-                          final index = state.resources.first.teams.indexOf(team);
-                          return RankRow(
-                            representation: TeamRankRowViewModel(
-                              team: team,
-                              leagueId: leagueId,
-                              seasonId: season,
-                            ),
-                            index: index,
-                            coordinator: _coordinator,
-                          );
-                        }).toList(),
-                      ),
-                      Container(height: 1, color: Colors.grey,),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 24
-                        ),
-                        height: 108,
-                        decoration: BoxDecoration(
-                          color: Color(0xFFF6F6F6),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(16),
-                            bottomRight: Radius.circular(16),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                BoldText('J: Partidos Jugados'),
-                                SizedBox(height: 16,),
-                                BoldText('G: Ganados'),
-                              ],
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                BoldText('E: Empates'),
-                                SizedBox(height: 16,),
-                                BoldText('P: Perdidos'),
-                              ],
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                BoldText('PTS: Puntos'),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ]
-                ),
-              ),
-            );
-          },
+          builder: (context, state) => _widgetForState(state),
         ),
       ),
     );
@@ -285,13 +196,11 @@ class RankRow extends StatelessWidget {
     super.key,
     required this.representation,
     required this.index,
-    AppCoordinator? coordinator,
-  }) : _coordinator = coordinator;
+  });
 
   final int index;
   final RankRowRepresentable representation;
 
-  AppCoordinator? _coordinator;
 
   @override
   Widget build(BuildContext context) {
