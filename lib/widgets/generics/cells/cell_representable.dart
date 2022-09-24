@@ -8,4 +8,5 @@ abstract class CellRepresentable<T> implements BaseCellRepresentable<T> {
   String get title;
   String get semanticsLabel;
   String get imageURL;
+  String get searchValue;
 }

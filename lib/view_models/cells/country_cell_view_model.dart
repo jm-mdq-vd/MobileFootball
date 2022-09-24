@@ -18,4 +18,7 @@ class CountryCellViewModel implements CellRepresentable {
 
   @override
   String get imageURL => country.flag ?? '';
+
+  @override
+  String get searchValue => country.name;
 }

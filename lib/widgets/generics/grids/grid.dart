@@ -1,36 +1,67 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:mobile_football/widgets/generics/cells/cell_representable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:mobile_football/widgets/generics/cells/cell_representable.dart';
 import 'grid_representation.dart';
 import '../cells/grid_cell.dart';
-import '../cells/cell_representable.dart';
 import '../../../utility/extensions/context_extension.dart';
 
-class CellRepresentableRepository {
-  CellRepresentableRepository({List<CellRepresentable<String>>? data}) : _data = data ?? const [];
-
-  final List<CellRepresentable<String>> _data;
-
-  List<CellRepresentable<String>> matches(String query) => _data.where((element) => element.id.contains(query)).toList();
+abstract class CellRepresentationProvider {
+  int get itemCount;
+  Function(CellRepresentable cell)? get onSelection;
+  CellRepresentable itemAtIndex(int index);
 }
 
-class SearchBarBloc<Resource> {
-  final CellRepresentableRepository _repository;
-  final _searchQueryController = StreamController<String?>();
-  Sink<String?> get searchQuery => _searchQueryController.sink;
-
-  late Stream<List<CellRepresentable<String>>> results;
-
-  SearchBarBloc(CellRepresentableRepository repository) : _repository = repository {
-    results = _searchQueryController
-      .stream
-      .asyncMap((query) => _repository.matches(query ?? ''));
+extension CellRepresentationX on CellRepresentationProvider {
+  void itemSelectedAtIndex(int index) {
+    final selectedCell = itemAtIndex(index);
+    if (onSelection != null) {
+      onSelection!(selectedCell);
+    }
   }
 }
 
-class SearchGrid extends StatefulWidget {
+class CellRepresentableRepository {
+  CellRepresentableRepository({required List<CellRepresentable> data}) : _data = data ?? const [];
+
+  final List<CellRepresentable> _data;
+
+  List<CellRepresentable> matches(String query) => _data.where((element) => element.searchValue.substring(0, 3).toLowerCase().contains(query.toLowerCase())).toList();
+}
+
+class SearchState implements CellRepresentationProvider {
+  SearchState({required List<CellRepresentable> results}) : _results = results;
+
+  List<CellRepresentable> _results;
+
+  Function(CellRepresentable cell)? onSelection;
+
+  int get itemCount => _results.length;
+  bool get foundResults => _results.isNotEmpty;
+  CellRepresentable itemAtIndex(int index) => _results[index];
+}
+
+
+class SearchEvent {
+  SearchEvent({required this.query});
+
+  String query;
+}
+
+class SearchBloc extends Bloc<SearchEvent, SearchState>  {
+  final CellRepresentableRepository _repository;
+
+  SearchBloc({required CellRepresentableRepository repository}) : _repository = repository, super(SearchState(results: [])) {
+    on<SearchEvent>((event, emit) {
+      final results = _repository.matches(event.query);
+      for (var result in results) print(result.title);
+      emit(SearchState(results: results));
+    });
+  }
+}
+
+class SearchGrid extends StatefulWidget implements CellRepresentationProvider {
   const SearchGrid({
     super.key,
     required this.representation,
@@ -58,13 +89,6 @@ class SearchGrid extends StatefulWidget {
 
   @override
   State<SearchGrid> createState() => _SearchGridState();
-
-  void itemSelectedAtIndex(int index) {
-    final selectedCell = itemAtIndex(index);
-    if (onSelection != null) {
-      onSelection!(selectedCell);
-    }
-  }
 }
 
 class _SearchGridState extends State<SearchGrid> {
@@ -72,60 +96,73 @@ class _SearchGridState extends State<SearchGrid> {
 
   List<int> _indexesOfSelectedItems = [];
   int _selectedIndex = -1;
+  CellRepresentationProvider cellProvider(SearchState state) => state.foundResults ? state : widget;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Text(widget.title),
-      ),
-      body: Container(
-        color: const Color(0xB9EEECEC),
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            _searchBar(),
-            Container(
-              padding: const EdgeInsets.all(_insets),
-              child: GridView.builder(
-                clipBehavior: Clip.none,
-                scrollDirection: Axis.vertical,
-                physics: NeverScrollableScrollPhysics(), // to disable GridView's scrolling
-                shrinkWrap: true,
-                gridDelegate: widget.delegate,
-                itemCount: widget.itemCount,
-                itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    onTap: () {
-                      if (mounted) {
-                        setState(() {
-                          if (_selectedIndex == index) {
-                            _selectedIndex = -1;
-                            return;
-                          }
-                          _selectedIndex = index;
-                        });
-                        widget.itemSelectedAtIndex(index);
-                      }
-                    },
-                    child: GridCell(
-                      model: widget.itemAtIndex(index),
-                      isSelected: _selectedIndex == index,
-                      width: (context.width / widget.crossAxisCount) -
-                          (widget.itemSpacing * widget.crossAxisCount),
-                    ),
-                  );
-                },
+    return RepositoryProvider(
+      create: (context) => CellRepresentableRepository(data: widget.representation.content),
+      child: BlocProvider<SearchBloc>(
+        create: (context) => SearchBloc(repository: context.read<CellRepresentableRepository>()),
+        child: BlocBuilder<SearchBloc, SearchState>(
+          builder: (context, state) {
+            return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.black,
+                title: Text(widget.title),
               ),
-            ),
-          ],
-        ),
+              body: Container(
+                color: const Color(0xB9EEECEC),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    _searchBar(context),
+                    Container(
+                      padding: const EdgeInsets.all(_insets),
+                      child: GridView.builder(
+                        clipBehavior: Clip.none,
+                        scrollDirection: Axis.vertical,
+                        physics: NeverScrollableScrollPhysics(), // to disable GridView's scrolling
+                        shrinkWrap: true,
+                        gridDelegate: widget.delegate,
+                        itemCount: !state.foundResults ? widget.itemCount : state.itemCount,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () {
+                              final CellRepresentationProvider cellProvider = state.foundResults ? state : widget;
+                              if (cellProvider == state) state.onSelection = widget.onSelection;
+                              if (mounted) {
+                                setState(() {
+                                  if (_selectedIndex == index) {
+                                    _selectedIndex = -1;
+                                    return;
+                                  }
+                                  _selectedIndex = index;
+                                });
+                                cellProvider.itemSelectedAtIndex(index);
+                              }
+                            },
+                            child: GridCell(
+                              model: cellProvider(state).itemAtIndex(index),
+                              isSelected: _selectedIndex == index,
+                              width: (context.width / widget.crossAxisCount) -
+                                  (widget.itemSpacing * widget.crossAxisCount),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+        )
       ),
     );
   }
 
-  Widget _searchBar() {
+  Widget _searchBar(BuildContext context) {
     return Container(
       color: Colors.white,
       child: TextField(
@@ -134,7 +171,7 @@ class _SearchGridState extends State<SearchGrid> {
           contentPadding: const EdgeInsets.symmetric(horizontal: 16,),
         ),
         onChanged: (query) {
-          print(query);
+          context.read<SearchBloc>().add(SearchEvent(query: query));
         },
       ),
     );
@@ -156,7 +193,6 @@ class Grid extends StatefulWidget {
 
   final Function(CellRepresentable cell)? onSelection;
 
-  String get _title => representation.title;
   int get _itemCount => representation.content.length;
   CellRepresentable _itemAtIndex(int index) => representation.content[index];
 

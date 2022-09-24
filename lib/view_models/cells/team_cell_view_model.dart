@@ -17,5 +17,8 @@ class TeamCellViewModel implements CellRepresentable {
   String get semanticsLabel => team.name;
 
   @override
+  String get searchValue => team.name;
+
+  @override
   String get imageURL => team.logo;
 }
