@@ -150,7 +150,7 @@ class StandingsHeader extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
-                width: 214,
+                width: 180,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -180,7 +180,10 @@ class StandingsHeader extends StatelessWidget {
               ),
               Container(
                 width: 30,
-                child: const UnderlinedBoldText('PTS',),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: const UnderlinedBoldText('PTS',),
+                ),
               ),
             ],
           ),

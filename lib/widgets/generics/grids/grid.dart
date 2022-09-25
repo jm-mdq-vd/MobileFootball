@@ -27,7 +27,7 @@ class CellRepresentableRepository {
 
   final List<CellRepresentable> _data;
 
-  List<CellRepresentable> matches(String query) => _data.where((element) => element.searchValue.substring(0, 3).toLowerCase().contains(query.toLowerCase())).toList();
+  List<CellRepresentable> results(String query) => _data.where((element) => element.searchValue.substring(0, query.length).toLowerCase().contains(query.toLowerCase())).toList();
 }
 
 class SearchState implements CellRepresentationProvider {
@@ -54,8 +54,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState>  {
 
   SearchBloc({required CellRepresentableRepository repository}) : _repository = repository, super(SearchState(results: [])) {
     on<SearchEvent>((event, emit) {
-      final results = _repository.matches(event.query);
-      for (var result in results) print(result.title);
+      final results = _repository.results(event.query);
       emit(SearchState(results: results));
     });
   }
@@ -94,7 +93,6 @@ class SearchGrid extends StatefulWidget implements CellRepresentationProvider {
 class _SearchGridState extends State<SearchGrid> {
   static const double _insets = 16.0;
 
-  List<int> _indexesOfSelectedItems = [];
   int _selectedIndex = -1;
   CellRepresentationProvider cellProvider(SearchState state) => state.foundResults ? state : widget;
 

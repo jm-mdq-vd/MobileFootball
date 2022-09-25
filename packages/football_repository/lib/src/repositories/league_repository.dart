@@ -1,27 +1,15 @@
 import 'dart:async';
-import 'dart:developer' as devlog;
 import 'package:football_api/football_api.dart' hide League;
+import 'package:football_repository/src/cache/cache_implementable.dart';
 import 'package:football_repository/src/models/season/league_season.dart';
 
-import 'repository.dart';
 import '../models/league/league.dart';
-import '../extensions/list_extension.dart';
-import '../cache/cache_repository.dart';
 
-class LeagueRepository implements Repository<League> {
-  LeagueRepository(ApiClient? client)
-      : _client = client != null ? client : FootballAPIClient.shared;
-
-  final ApiClient _client;
+class LeagueRepository extends ClientCacheRepository<League> {
+  LeagueRepository(super.client);
 
   Future<List<League>> getResource(Map<String, dynamic> parameters) async {
-    final code = parameters['code'];
-    final List<League>? cachedInfo = CacheRepository.shared.getResponseFromEndpoint(Endpoint.leagues, parameters,);
-    if (cachedInfo != null) return cachedInfo;
-
-    final response = await _client.getResponseFromEndpoint(Endpoint.leagues, parameters,);
-    final leaguesInfo = response.response.castToType<LeagueInfo>();
-
+    final leaguesInfo = await getResults<LeagueInfo>(Endpoint.leagues, parameters);
     var leagues = leaguesInfo
         .map((leagueInfo) {
       leagueInfo.seasons.sort((left, right) => right.year.compareTo(left.year));
@@ -49,11 +37,12 @@ class LeagueRepository implements Repository<League> {
       );
     }).toList();
 
-    CacheRepository.shared.saveValueForEndpoint(
+    save(
       Endpoint.leagues,
       parameters,
-      leagues,
+      leaguesInfo,
     );
+
     return leagues;
   }
 }

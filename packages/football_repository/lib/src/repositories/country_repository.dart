@@ -2,26 +2,27 @@ import 'dart:async';
 import 'dart:developer' as devlog;
 import 'package:football_api/football_api.dart';
 
-import 'repository.dart';
 import '../models/country/country_info.dart';
-import '../extensions/list_extension.dart';
-import '../cache/cache_repository.dart';
+import '../cache/cache_implementable.dart';
 
-class CountryRepository implements Repository<CountryInfo> {
-  CountryRepository(ApiClient? client)
-      : _client = client != null ? client : FootballAPIClient.shared;
-
-  final ApiClient _client;
+class CountryRepository extends ClientCacheRepository<CountryInfo> {
+  CountryRepository(super.client);
 
   Future<List<CountryInfo>> getResource(Map<String, dynamic> parameters) async {
+    /*
     final List<CountryInfo>? cachedInfo = CacheRepository.shared.getResponseFromEndpoint(Endpoint.countries, parameters,);
     if (cachedInfo != null) return cachedInfo;
+
+    final cachedResults = getResultsFromCache(Endpoint.countries, parameters);
+    if (cachedResults != null) cachedResults;
+
     final response = await _client.getResponseFromEndpoint(
       Endpoint.countries,
       null,
     );
     final countries = response.response.castToType<Country>();
-    devlog.log('Countries fetched ${countries.length}');
+     */
+    final countries = await getResults<Country>(Endpoint.countries, parameters);
     List<CountryInfo> list = [];
     for (final country in countries) {
       list.add(CountryInfo(
@@ -32,11 +33,12 @@ class CountryRepository implements Repository<CountryInfo> {
     }
 
     list.removeWhere((country) => country.name == "World");
-    CacheRepository.shared.saveValueForEndpoint(
+    save(
       Endpoint.countries,
       parameters,
-      list,
+      countries,
     );
+
     return list;
   }
 }
