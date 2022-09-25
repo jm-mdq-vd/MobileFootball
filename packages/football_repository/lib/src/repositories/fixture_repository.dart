@@ -1,22 +1,14 @@
 import 'package:football_api/football_api.dart' hide Fixture;
-import 'package:football_repository/src/extensions/list_extension.dart';
 
-import 'repository.dart';
 import '../models/fixtures/fixture.dart';
+import '../cache/cache_implementable.dart';
 
-class FixtureRepository implements Repository<Fixture> {
-  FixtureRepository(ApiClient? client)
-      : _client = client != null ? client : FootballAPIClient.shared;
-
-  final ApiClient _client;
+class FixtureRepository extends TimedClientCacheRepository<Fixture> {
+  FixtureRepository(super.client);
 
   Future<List<Fixture>> getResource(Map<String, dynamic> parameters) async {
-    final response = await _client.getResponseFromEndpoint(
-      Endpoint.fixtures,
-      parameters,
-    );
-    final parsedResponse = response.response.castToType<FixturesInfo>();
-    var fixtures = parsedResponse
+    final results = await getResults(Endpoint.fixtures, parameters,);
+    var fixtures = results
         .where((fixture) => DateTime.parse(fixture.fixture.date).isTodayOrClosest)
         .map((fixture) {
       return Fixture(
@@ -43,6 +35,14 @@ class FixtureRepository implements Repository<Fixture> {
         stadium: fixture.fixture.venue.name ?? 'No Disponible',
       );
     }).toList();
+
+    save(
+      Endpoint.fixtures,
+      parameters,
+      results,
+      saveWithTimeout: true,
+    );
+
     return fixtures;
   }
 }

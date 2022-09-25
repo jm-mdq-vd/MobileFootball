@@ -9,19 +9,6 @@ class CountryRepository extends ClientCacheRepository<CountryInfo> {
   CountryRepository(super.client);
 
   Future<List<CountryInfo>> getResource(Map<String, dynamic> parameters) async {
-    /*
-    final List<CountryInfo>? cachedInfo = CacheRepository.shared.getResponseFromEndpoint(Endpoint.countries, parameters,);
-    if (cachedInfo != null) return cachedInfo;
-
-    final cachedResults = getResultsFromCache(Endpoint.countries, parameters);
-    if (cachedResults != null) cachedResults;
-
-    final response = await _client.getResponseFromEndpoint(
-      Endpoint.countries,
-      null,
-    );
-    final countries = response.response.castToType<Country>();
-     */
     final countries = await getResults<Country>(Endpoint.countries, parameters);
     List<CountryInfo> list = [];
     for (final country in countries) {

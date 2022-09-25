@@ -1,35 +1,15 @@
 import 'dart:async';
-import 'dart:developer' as dev_tools;
 import 'package:football_api/football_api.dart' hide Team;
-import 'package:football_repository/src/mixins/timing.dart';
 
-import 'repository.dart';
 import '../models/standing/standing_info.dart';
 import '../models/team/team.dart';
-import '../extensions/list_extension.dart';
-import '../cache/cache_repository.dart';
+import '../cache/cache_implementable.dart';
 
-class StandingsRepository with Timing implements Repository<StandingInfo> {
-  StandingsRepository(ApiClient? client)
-      : _client = client != null ? client : FootballAPIClient.shared;
-
-  final ApiClient _client;
+class StandingsRepository extends TimedClientCacheRepository<StandingInfo> {
+  StandingsRepository(super.client);
 
   Future<List<StandingInfo>> getResource(Map<String, dynamic> parameters) async {
-    if (timer != null && timerIsActive) {
-      final List<StandingInfo>? cachedInfo = CacheRepository.shared.getResponseFromEndpoint(Endpoint.standings, parameters,);
-      if (cachedInfo != null) {
-        dev_tools.log('Getting results from cache');
-        return cachedInfo;
-      }
-    }
-
-    final response = await _client.getResponseFromEndpoint(
-      Endpoint.standings,
-      parameters,
-    );
-
-    final standings = response.response.castToType<Standing>();
+    final standings = await getResults<Standing>(Endpoint.standings, parameters,);
     List<StandingInfo> list = standings.map((standing) {
       final teams = standing.league.standings.first;
       return StandingInfo(
@@ -59,15 +39,12 @@ class StandingsRepository with Timing implements Repository<StandingInfo> {
       );
     }).toList();
 
-    CacheRepository.shared.saveValueForEndpoint(
+    save(
       Endpoint.standings,
       parameters,
       standings,
+      saveWithTimeout: true,
     );
-
-    startTimer();
-
-    dev_tools.log('TIMER INITIALIZED');
 
     return list;
   }
