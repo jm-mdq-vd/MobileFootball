@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:mobile_football/navigation/app_coordinator.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+import 'package:mobile_football/navigation/app_coordinator.dart';
 import 'package:mobile_football/resources/local_assets.dart';
 import 'package:mobile_football/screens/grid_screens/countries_grid_screen.dart';
 
@@ -23,6 +24,9 @@ class MobileFootballApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        textTheme: GoogleFonts.bebasNeueTextTheme(),
+      ),
       home: AnimatedSplashScreen(
         splash: LocalAssets.splashLottie,
         backgroundColor: Colors.white,

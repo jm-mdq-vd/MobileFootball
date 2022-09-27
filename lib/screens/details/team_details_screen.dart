@@ -42,8 +42,14 @@ class TeamDetailScreen extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 child: NetworkImageProvider.image(team.stadiumImage ?? ''),
               ),
-              Padding(
+              Container(
                 padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(16),
+                    topRight: Radius.circular(16),
+                  ),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -76,28 +82,27 @@ class TeamDetailScreen extends StatelessWidget {
                         fontSize: 18,
                       ),
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TeamDetailText('Fundado en el año ${team.founded}',),
-                    const SizedBox(height: 8,),
-                    TeamDetailText('Dirección del estadio: ${team.address}',),
-                    const SizedBox(height: 8,),
-                    TeamDetailText('Capacidad del estadio: ${team.stadiumCapacity} Personas',),
-                    const SizedBox(height: 8,),
-                    Row(
+                    SizedBox(height: 8,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TeamDetailText('Pais: ${team.country}',),
+                        TeamDetailText('Fundado en el año ${team.founded}',),
+                        const SizedBox(height: 8,),
+                        TeamDetailText('Dirección del estadio: ${team.address}',),
+                        const SizedBox(height: 8,),
+                        TeamDetailText('Capacidad del estadio: ${team.stadiumCapacity} Personas',),
+                        const SizedBox(height: 8,),
+                        Row(
+                          children: [
+                            TeamDetailText('Pais: ${team.country}',),
+                          ],
+                        )
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
+              /*
               RepositoryProvider<StatisticsRepository>(
                 create: (context) => StatisticsRepository(null),
                 child: BlocProvider<ResourceBloc<Statistics>>(
@@ -116,6 +121,7 @@ class TeamDetailScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              */
             ],
           ),
         ),
@@ -143,16 +149,17 @@ class TeamDetailScreen extends StatelessWidget {
 }
 
 class TeamDetailText extends StatelessWidget {
-  const TeamDetailText(this.data, {super.key,});
+  const TeamDetailText(this.data, {super.key, this.fontSize = 18});
 
   final String data;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
     return Text(
       data,
       style: TextStyle(
-        fontSize: 20,
+        fontSize: fontSize,
         fontWeight: FontWeight.w500,
       ),
     );

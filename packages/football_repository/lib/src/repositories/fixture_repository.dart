@@ -8,9 +8,13 @@ class FixtureRepository extends TimedClientCacheRepository<Fixture> {
 
   Future<List<Fixture>> getResource(Map<String, dynamic> parameters) async {
     final results = await getResults(Endpoint.fixtures, parameters,);
-    var fixtures = results
-        .where((fixture) => DateTime.parse(fixture.fixture.date).isTodayOrClosest)
-        .map((fixture) {
+    var filteredResults = results.where((fixture) => DateTime.parse(fixture.fixture.date).isThisWeek);
+
+    if (filteredResults.isEmpty) {
+      filteredResults = results.where((fixture) => fixture.fixture.status.short == 'FT').take(10);
+    }
+
+    var fixtures = filteredResults.map((fixture) {
       return Fixture(
         id: fixture.fixture.id,
         referee: fixture.fixture.referee,
@@ -33,6 +37,7 @@ class FixtureRepository extends TimedClientCacheRepository<Fixture> {
           goals: fixture.goals.away ?? -1,
         ),
         stadium: fixture.fixture.venue.name ?? 'No Disponible',
+        isFinished: fixture.fixture.status.short == 'FT',
       );
     }).toList();
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'dart:developer' as devlog;
+import 'dart:core';
+import 'dart:developer' as dev_tools;
 import 'package:http/http.dart' as http;
 
 import 'endpoint.dart';
@@ -21,9 +22,33 @@ extension DateHelpers on DateTime {
     final now = DateTime.now();
     return (now.day + 1) == day && now.month == month && now.year == year;
   }
+  
+  bool isAfterThan(DateTime other) {
+    return this.day > other.day || this.month > other.month || this.year > other.year;
+  }
 
-  bool get isTodayOrClosest {
-    return isToday || isYesterday || isTomorrow;
+  static DateTime get endOfCurrentWeek {
+    final daysToAdd = 7 - DateTime.now().weekday;
+    return DateTime.now().add(Duration(days: daysToAdd));
+  }
+
+  static DateTime get startOfCurrentWeek {
+    final daysToSubtract = DateTime.now().weekday - 1;
+    return DateTime.now().subtract(Duration(days: daysToSubtract));
+  }
+
+  DateTime get endOfWeek {
+    final daysToAdd = 7 - weekday;
+    return add(Duration(days: daysToAdd));
+  }
+
+  DateTime get startOfWeek {
+    final daysToSubtract = weekday - 1;
+    return subtract(Duration(days: daysToSubtract));
+  }
+
+  bool get isThisWeek {
+    return this.isAfter(startOfCurrentWeek) && this.isBefore(endOfCurrentWeek);
   }
 }
 
@@ -113,8 +138,8 @@ class FootballAPIClient implements ApiClient {
       String path,
       Map<String, dynamic>? parameters,
       List<T> Function(List list) fromJson,) async {
-    _numberOfRequest = !_lastRequestDate.isToday ? 0 : _numberOfRequest++;
-    _lastRequestDate = DateTime.now();
+    // _numberOfRequest = !_lastRequestDate.isToday ? 0 : _numberOfRequest++;
+    // _lastRequestDate = DateTime.now();
 
     if (_numberOfRequest == _maxRequestPerDay) {
       throw MaxNumberOfRequestsReached();
@@ -131,13 +156,12 @@ class FootballAPIClient implements ApiClient {
     );
 
     request.headers.addAll({_apiHeaderKey: _key});
-    devlog.log(request.url.toString());
+    dev_tools.log(request.url.toString());
 
     final streamedResponse = await request.send();
     if (streamedResponse.statusCode == 200) {
       final response = await http.Response.fromStream(streamedResponse);
       final decodedJson = jsonDecode(response.body);
-      print(response.body);
       return APIResponse.fromJson(decodedJson, fromJson);
     } else {
       throw ServiceError(streamedResponse.statusCode);

@@ -138,7 +138,7 @@ class StandingsHeader extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(8),
-          height: 50,
+          height: 55,
           decoration: BoxDecoration(
             color: Color(0xFFF6F6F6),
             borderRadius: BorderRadius.only(
@@ -150,7 +150,7 @@ class StandingsHeader extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
-                width: 180,
+                width: 195,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

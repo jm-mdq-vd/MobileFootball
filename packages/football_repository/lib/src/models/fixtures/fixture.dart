@@ -36,6 +36,7 @@ class Fixture extends Equatable {
     required this.home,
     required this.away,
     required this.stadium,
+    required this.isFinished,
   });
 
   final int id;
@@ -47,6 +48,7 @@ class Fixture extends Equatable {
   final FixtureTeamInfo home;
   final FixtureTeamInfo away;
   final String stadium;
+  final bool isFinished;
 
 
   @override
@@ -59,5 +61,6 @@ class Fixture extends Equatable {
     home,
     away,
     stadium,
+    isFinished,
   ];
 }

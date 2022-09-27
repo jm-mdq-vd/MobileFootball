@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:football_repository/football_repository.dart';
@@ -64,6 +66,30 @@ class MatchTable extends StatefulWidget {
 }
 
 class _MatchTableState extends State<MatchTable> {
+  final html = '''<!DOCTYPE html>
+  <html>
+  <body>
+  <div id="wg-api-football-game"
+    data-host="v3.football.api-sports.io"
+    data-key="0611975160523abb8507536bfd83172c"
+    data-id="831664"
+    data-theme=""
+    data-refresh="15"
+    data-show-errors="false"
+    data-show-logos="true">
+  </div>
+  <script
+    type="module"
+    src="https://widgets.api-sports.io/2.0.3/widgets.js">
+  </script>
+  </body>
+  </html>''';
+
+  void loadLocalHtml() async {
+    final url = Uri.dataFromString(html, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString();
+    // _controller.loadUrl(url);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -111,6 +137,7 @@ class MatchCellRepresentation {
   String get homeTeamGoals => fixture.home.goals != -1 ? fixture.home.goals.toString() : '-';
   String get awayTeamGoals => fixture.away.goals != -1 ? fixture.away.goals.toString() : '-';
   String get stadium => fixture.stadium;
+  String get round => fixture.round;
 }
 
 class MatchCell extends StatelessWidget {
@@ -126,80 +153,92 @@ class MatchCell extends StatelessWidget {
     return Container(
       height: 160,
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(16)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black,
-            offset: Offset(1, 1),
-            blurRadius: 2,
-            blurStyle: BlurStyle.outer,
-          )
-        ]
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              offset: Offset(1, 1),
+              blurRadius: 2,
+              blurStyle: BlurStyle.outer,
+            )
+          ]
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(2),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              representation.stadium,
-              style: TextStyle(
-                fontSize: 10,
-                color: Colors.grey,
-              ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            representation.stadium,
+            style: TextStyle(
+              fontSize: 10,
+              color: Colors.grey,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TeamView(team: representation.home),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          representation.homeTeamGoals,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TeamView(team: representation.home),
+              SizedBox(width: 16,),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        representation.homeTeamGoals,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500,
                         ),
-                        SizedBox(width: 16,),
-                        Text(
-                          'VS',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
+                      ),
+                      SizedBox(width: 16,),
+                      Text(
+                        'VS',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
                         ),
-                        SizedBox(width: 16,),
-                        Text(
-                          representation.awayTeamGoals,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
+                      ),
+                      SizedBox(width: 16,),
+                      Text(
+                        representation.awayTeamGoals,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500,
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(width: 16,),
+              TeamView(team: representation.away),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Fecha: ${representation.date.dayMonthYear}',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.grey,
                 ),
-                TeamView(team: representation.away),
-              ],
-            ),
-            Text(
-              'Fecha: ${representation.date.dayMonthYear}',
-              style: TextStyle(
-                fontSize: 10,
-                color: Colors.grey,
               ),
-            ),
-          ],
-        ),
+              SizedBox(width: 20,),
+              Text(
+                'Round: ${representation.round}',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
