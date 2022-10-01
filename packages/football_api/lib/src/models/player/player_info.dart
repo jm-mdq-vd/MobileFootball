@@ -7,10 +7,26 @@ import '../../interfaces/deserializable.dart';
 part 'player_info.g.dart';
 
 @JsonSerializable()
-class Player implements Deserializable {
-  Player({
+class BasicPlayerInfo implements Deserializable {
+  BasicPlayerInfo({
     required this.id,
     required this.name,
+  });
+
+  final int? id;
+  final String name;
+
+  factory BasicPlayerInfo.fromJson(Map<String, dynamic> json) => _$BasicPlayerInfoFromJson(json);
+
+  @override
+  BasicPlayerInfo Function(Map<String, dynamic> object) get deserialize => BasicPlayerInfo.fromJson;
+}
+
+@JsonSerializable()
+class Player extends BasicPlayerInfo implements Deserializable {
+  Player({
+    required super.id,
+    required super.name,
     required this.firstname,
     required this.lastname,
     required this.age,
@@ -21,8 +37,6 @@ class Player implements Deserializable {
     required this.photo,
   });
 
-  final int id;
-  final String name;
   final String firstname;
   final String lastname;
   final int age;

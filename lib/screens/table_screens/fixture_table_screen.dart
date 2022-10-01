@@ -66,30 +66,6 @@ class MatchTable extends StatefulWidget {
 }
 
 class _MatchTableState extends State<MatchTable> {
-  final html = '''<!DOCTYPE html>
-  <html>
-  <body>
-  <div id="wg-api-football-game"
-    data-host="v3.football.api-sports.io"
-    data-key="0611975160523abb8507536bfd83172c"
-    data-id="831664"
-    data-theme=""
-    data-refresh="15"
-    data-show-errors="false"
-    data-show-logos="true">
-  </div>
-  <script
-    type="module"
-    src="https://widgets.api-sports.io/2.0.3/widgets.js">
-  </script>
-  </body>
-  </html>''';
-
-  void loadLocalHtml() async {
-    final url = Uri.dataFromString(html, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString();
-    // _controller.loadUrl(url);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -98,16 +74,12 @@ class _MatchTableState extends State<MatchTable> {
           color: const Color(0xB9EEECEC),
           child: Column(
             children: [
-              Container(
-                color: Color(0xFFE2E1E1),
-                height: 50,
-              ),
-              SizedBox(height: 8,),
               Expanded(
                 child: ListView.builder(
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: MatchCell(
+                    return Padding(
+                      padding: const EdgeInsets.only(left: 16.0, top: 8.0, right: 16.0, bottom: 8.0,),
+                      child: MatchCell(
                         representation: widget.itemAtIndex(index),
                       ),
                     );
@@ -154,15 +126,7 @@ class MatchCell extends StatelessWidget {
       height: 160,
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(16)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black,
-              offset: Offset(1, 1),
-              blurRadius: 2,
-              blurStyle: BlurStyle.outer,
-            )
-          ]
+          borderRadius: BorderRadius.all(Radius.circular(12),),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

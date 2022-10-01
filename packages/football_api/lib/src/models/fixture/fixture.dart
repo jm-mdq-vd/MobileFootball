@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../../interfaces/deserializable.dart';
 import '../venue/venue.dart';
+import 'fixture_event.dart';
 
 part 'fixture.g.dart';
 
@@ -128,12 +129,14 @@ class FixturesInfo implements Deserializable {
     required this.league,
     required this.teams,
     required this.goals,
+    this.events,
   });
 
   final Fixture fixture;
   final FixtureLeague league;
   final Teams teams;
   final Goals goals;
+  final List<FixtureEvent>? events;
 
   factory FixturesInfo.fromJson(Map<String, dynamic> json) => _$FixturesInfoFromJson(json);
 

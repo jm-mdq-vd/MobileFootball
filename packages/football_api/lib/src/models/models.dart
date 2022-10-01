@@ -5,7 +5,7 @@ export 'team/team.dart';
 export 'team/team_info.dart';
 export 'team/team_statistics.dart';
 export 'fixture/fixture.dart';
-export 'event/event.dart';
+export 'fixture/fixture_event.dart';
 export 'coverage/coverage.dart';
 export 'player/player_info.dart';
 export 'season/season.dart';

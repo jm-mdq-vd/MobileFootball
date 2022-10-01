@@ -14,7 +14,7 @@ class FixtureRepository extends TimedClientCacheRepository<Fixture> {
       filteredResults = results.where((fixture) => fixture.fixture.status.short == 'FT').take(10);
     }
 
-    var fixtures = filteredResults.map((fixture) {
+    final fixtures = filteredResults.map((fixture) {
       return Fixture(
         id: fixture.fixture.id,
         referee: fixture.fixture.referee,
@@ -40,6 +40,8 @@ class FixtureRepository extends TimedClientCacheRepository<Fixture> {
         isFinished: fixture.fixture.status.short == 'FT',
       );
     }).toList();
+
+    fixtures.sort((left, right) => right.date.compareTo(left.date));
 
     save(
       Endpoint.fixtures,

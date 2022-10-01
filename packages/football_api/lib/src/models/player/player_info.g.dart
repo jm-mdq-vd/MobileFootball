@@ -6,8 +6,20 @@ part of 'player_info.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+BasicPlayerInfo _$BasicPlayerInfoFromJson(Map<String, dynamic> json) =>
+    BasicPlayerInfo(
+      id: json['id'] as int?,
+      name: json['name'] as String,
+    );
+
+Map<String, dynamic> _$BasicPlayerInfoToJson(BasicPlayerInfo instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+    };
+
 Player _$PlayerFromJson(Map<String, dynamic> json) => Player(
-      id: json['id'] as int,
+      id: json['id'] as int?,
       name: json['name'] as String,
       firstname: json['firstname'] as String,
       lastname: json['lastname'] as String,

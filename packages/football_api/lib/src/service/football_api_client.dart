@@ -22,10 +22,6 @@ extension DateHelpers on DateTime {
     final now = DateTime.now();
     return (now.day + 1) == day && now.month == month && now.year == year;
   }
-  
-  bool isAfterThan(DateTime other) {
-    return this.day > other.day || this.month > other.month || this.year > other.year;
-  }
 
   static DateTime get endOfCurrentWeek {
     final daysToAdd = 7 - DateTime.now().weekday;

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:mobile_football/navigation/app_coordinator.dart';
 import 'package:mobile_football/screens/grid_screens/teams_grid_screen.dart';
 import 'package:mobile_football/screens/table_screens/standing_table_screen.dart';
 import 'package:mobile_football/screens/table_screens/fixture_table_screen.dart';

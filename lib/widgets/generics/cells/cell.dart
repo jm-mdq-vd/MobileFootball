@@ -17,13 +17,12 @@ class Cell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
+      height: 50,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
         color: isSelected ? const Color(0x331DA7FA) : Colors.white,
         border: isSelected ? Border.all(
           color: const Color(0xA01DA7FA),
-          width: 3,
+          width: 2,
         ) : null,
       ),
       child: Padding(

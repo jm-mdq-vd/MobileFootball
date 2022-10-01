@@ -45,9 +45,9 @@ class _UnorderedListState extends State<UnorderedList> {
         child: Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                itemBuilder: (context, index) => ListTile(
-                  title: GestureDetector(
+              child: ListView.separated(
+                itemBuilder: (context, index) {
+                  return GestureDetector(
                     onTap: () {
                       if (mounted) {
                         setState(() {
@@ -60,9 +60,10 @@ class _UnorderedListState extends State<UnorderedList> {
                       model: widget.itemAtIndex(index),
                       isSelected: _selectedIndex == index,
                     ),
-                  ),
-                ),
+                  );
+                },
                 itemCount: widget.itemCount,
+                separatorBuilder: (BuildContext context, int index) => Container(height: 1, color: Colors.grey,),
               ),
             ),
           ],

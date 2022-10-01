@@ -94,6 +94,9 @@ FixturesInfo _$FixturesInfoFromJson(Map<String, dynamic> json) => FixturesInfo(
       league: FixtureLeague.fromJson(json['league'] as Map<String, dynamic>),
       teams: Teams.fromJson(json['teams'] as Map<String, dynamic>),
       goals: Goals.fromJson(json['goals'] as Map<String, dynamic>),
+      events: (json['events'] as List<dynamic>?)
+          ?.map((e) => FixtureEvent.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$FixturesInfoToJson(FixturesInfo instance) =>
@@ -102,4 +105,5 @@ Map<String, dynamic> _$FixturesInfoToJson(FixturesInfo instance) =>
       'league': instance.league,
       'teams': instance.teams,
       'goals': instance.goals,
+      'events': instance.events,
     };
