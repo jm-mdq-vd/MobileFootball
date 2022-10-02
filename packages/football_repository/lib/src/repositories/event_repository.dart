@@ -10,9 +10,11 @@ class EventRepository extends TimedClientCacheRepository<Event> {
   Future<List<Event>> getResource(Map<String, dynamic> parameters) async {
     final results = await getResults<FixtureEvent>(Endpoint.events, parameters,);
     final events = results.map((event) {
+      final extraTime = (event.time.extra != null) ? ' +${event.time.extra}\'\'' : '';
+      final time = '${event.time.elapsed}\'' + extraTime;
       return Event(
-        time: '${event.time.elapsed} +${event.time.extra}',
-        type: EventTypeX.fromString(event.type),
+        time: time,
+        type: EventTypeX.fromString(event.type, event.detail ?? ''),
         team: event.team.name,
         logo: event.team.logo,
         player: BasicPlayerInfo(
@@ -21,6 +23,8 @@ class EventRepository extends TimedClientCacheRepository<Event> {
         ),
       );
     }).toList();
+
+    events.removeWhere((event) => event.type == EventType.unknown);
 
     return events;
   }

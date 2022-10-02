@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:mobile_football/navigation/app_coordinator.dart';
 import 'package:mobile_football/view_models/cells/season_cell_view_model.dart';
 import 'package:mobile_football/widgets/generics/tables/table_representation.dart';
 import 'package:mobile_football/widgets/generics/tables/unordered_list.dart';

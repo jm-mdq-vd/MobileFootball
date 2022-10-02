@@ -4,6 +4,7 @@ export 'league/league_info.dart';
 export 'team/team.dart';
 export 'team/team_info.dart';
 export 'team/team_statistics.dart';
+export 'team/team_squad.dart';
 export 'fixture/fixture.dart';
 export 'fixture/fixture_event.dart';
 export 'coverage/coverage.dart';

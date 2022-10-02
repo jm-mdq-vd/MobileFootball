@@ -29,7 +29,7 @@ class FixtureEvent implements Deserializable {
     required this.team,
     required this.player,
     required this.type,
-    required this.details,
+    required this.detail,
     required this.comments,
   });
 
@@ -37,7 +37,7 @@ class FixtureEvent implements Deserializable {
   final BasicTeamInfo team;
   final BasicPlayerInfo player;
   final String type;
-  final String details;
+  final String? detail;
   final String? comments;
 
   factory FixtureEvent.fromJson(Map<String, dynamic> json) => _$FixtureEventFromJson(json);

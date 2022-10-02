@@ -36,10 +36,7 @@ class _UnorderedListState extends State<UnorderedList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Text(widget.title),
-      ),
+      appBar: AppBar(title: Text(widget.title),),
       body: Container(
         color: const Color(0xB9EEECEC),
         child: Column(

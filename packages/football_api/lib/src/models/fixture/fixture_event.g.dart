@@ -21,7 +21,7 @@ FixtureEvent _$FixtureEventFromJson(Map<String, dynamic> json) => FixtureEvent(
       team: BasicTeamInfo.fromJson(json['team'] as Map<String, dynamic>),
       player: BasicPlayerInfo.fromJson(json['player'] as Map<String, dynamic>),
       type: json['type'] as String,
-      details: json['details'] as String,
+      detail: json['detail'] as String?,
       comments: json['comments'] as String?,
     );
 
@@ -31,6 +31,6 @@ Map<String, dynamic> _$FixtureEventToJson(FixtureEvent instance) =>
       'team': instance.team,
       'player': instance.player,
       'type': instance.type,
-      'details': instance.details,
+      'detail': instance.detail,
       'comments': instance.comments,
     };

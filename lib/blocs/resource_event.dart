@@ -51,12 +51,18 @@ ResourceEvent<Fixture> getFixturesByTeam(String teamId, String season) => Resour
   parameters: {
     'team': teamId,
     'season': season,
-  }
+  },
 );
 
 ResourceEvent<Fixture> getFixturesByLeague(String leagueId, String season) => ResourceEvent(
   parameters: {
     'league': leagueId,
     'season': season,
-  }
+  },
+);
+
+ResourceEvent<Event> getEventsFromFixture(String fixtureId) => ResourceEvent(
+    parameters: {
+      'fixture': fixtureId,
+    },
 );

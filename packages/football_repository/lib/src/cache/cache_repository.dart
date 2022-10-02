@@ -79,6 +79,9 @@ class CacheRepository  {
       case Endpoint.fixtures:
         final String suffix = '${parameters['league']}_${parameters['season']}';
         return 'fixtures_' + suffix;
+      case Endpoint.squads:
+        final String team = '${parameters['team']}';
+        return 'squad_' + team;
       default:
         return '';
     }

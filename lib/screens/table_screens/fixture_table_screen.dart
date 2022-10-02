@@ -1,10 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:football_repository/football_repository.dart';
 
 import 'package:mobile_football/blocs/resource_bloc.dart';
+import 'package:mobile_football/screens/table_screens/event_table_screen.dart';
 import 'package:mobile_football/utility/extensions/date_extension.dart';
 import 'package:mobile_football/utility/network_image_provider.dart';
 import 'package:mobile_football/screens/resource_status_screen.dart';
@@ -79,8 +78,24 @@ class _MatchTableState extends State<MatchTable> {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.only(left: 16.0, top: 8.0, right: 16.0, bottom: 8.0,),
-                      child: MatchCell(
-                        representation: widget.itemAtIndex(index),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EventTableScreen(
+                                requirements: EventTableScreenRequirements(
+                                  values: {
+                                    EventTableScreenRequirements.fixtureIdKey: widget.itemAtIndex(index).id,
+                                  },
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        child: MatchCell(
+                          representation: widget.itemAtIndex(index),
+                        ),
                       ),
                     );
                   },
@@ -101,6 +116,7 @@ class MatchCellRepresentation {
 
   final Fixture fixture;
 
+  String get id => fixture.id.toString();
   String get referee => fixture.referee ?? 'No Disponible';
   DateTime get date => fixture.date;
   String get leagueName => fixture.leagueName;

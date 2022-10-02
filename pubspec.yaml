@@ -21,6 +21,7 @@ dependencies:
   cached_network_image: ^3.2.1
   football_repository:
     path: packages/football_repository
+  font_awesome_flutter: ^10.2.1
 
 dev_dependencies:
   bloc_test: ^9.1.0
