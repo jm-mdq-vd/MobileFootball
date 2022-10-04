@@ -6,7 +6,7 @@ class ResourceEvent<Resource> extends Equatable {
   final Map<String, dynamic> parameters;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [parameters];
 }
 
 ResourceEvent<League> getLeaguesByCountry(String country) => ResourceEvent(
