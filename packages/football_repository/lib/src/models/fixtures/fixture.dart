@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:football_repository/football_repository.dart';
 
 class FixtureTeamInfo extends Equatable {
   FixtureTeamInfo({
@@ -25,6 +26,45 @@ class FixtureTeamInfo extends Equatable {
   ];
 }
 
+enum FixtureStatus {
+  inProgress,
+  notStarted,
+  cancelled,
+  toBeDefined,
+  finished,
+  unknown
+}
+
+extension FixtureStatusX on FixtureStatus {
+  static FixtureStatus fromValue(String value) {
+    switch (value) {
+      case 'TBD':
+        return FixtureStatus.toBeDefined;
+      case 'NS':
+        return FixtureStatus.notStarted;
+      case '1H':
+      case '2H':
+      case 'HT':
+      case 'BT':
+      case 'ET':
+      case 'P':
+        return FixtureStatus.inProgress;
+      case 'FT':
+      case 'AET':
+      case 'PEN':
+        return FixtureStatus.finished;
+      case 'SUSP':
+      case 'INT':
+      case 'PST':
+      case 'CANC':
+      case 'ABN':
+        return FixtureStatus.cancelled;
+      default:
+        return FixtureStatus.unknown;
+    }
+  }
+}
+
 class Fixture extends Equatable {
   Fixture({
     required this.id,
@@ -36,7 +76,7 @@ class Fixture extends Equatable {
     required this.home,
     required this.away,
     required this.stadium,
-    required this.isFinished,
+    required this.status
   });
 
   final int id;
@@ -48,8 +88,7 @@ class Fixture extends Equatable {
   final FixtureTeamInfo home;
   final FixtureTeamInfo away;
   final String stadium;
-  final bool isFinished;
-
+  final FixtureStatus status;
 
   @override
   List<Object> get props => [
@@ -61,6 +100,6 @@ class Fixture extends Equatable {
     home,
     away,
     stadium,
-    isFinished,
+    status,
   ];
 }

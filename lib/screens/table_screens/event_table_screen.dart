@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:football_repository/football_repository.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:mobile_football/blocs/resource_bloc.dart';
 import 'package:mobile_football/screens/resource_status_screen.dart';
 import 'package:mobile_football/screens/screen_requirements.dart';
+import 'package:mobile_football/screens/table_screens/fixture_table_screen.dart';
 import 'package:mobile_football/utility/network_image_provider.dart';
 
 class EventTableScreenRequirements implements ScreenRequirements {
   EventTableScreenRequirements({required Map<String, dynamic> values}) : _values = values;
 
-  static String get fixtureIdKey => 'fixtureId';
+  static String get fixtureKey => 'fixture';
 
   Map<String, dynamic> _values;
 
-  String get fixtureId => _values[fixtureIdKey];
+  FixtureCellRepresentation get fixture => _values[fixtureKey];
+
+  String get fixtureId => fixture.id;
 }
 
 class EventTableScreen extends StatelessWidget {
@@ -85,58 +87,80 @@ class EventTableScreen extends StatelessWidget {
                 ),
                 body: Container(
                   color: const Color(0xB9EEECEC),
-                  child: ListView.builder(
-                    itemCount: state.resources.length,
-                    itemBuilder: (context, index) {
-                      final event = state.resources[index];
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          padding: EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(8),),
-                            color: Colors.white,
-                          ),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    SizedBox(
-                                      width: 30,
-                                      height: 30,
-                                      child: NetworkImageProvider.image(event.logo),
-                                    ),
-                                    const SizedBox(width: 16,),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(event.player.name),
-                                        Text(
-                                          event.team,
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    _iconForType(event.type),
-                                    SizedBox(width: 8,),
-                                    Text(event.time,),
-                                  ],
-                                ),
-                              ],
-                            ),
+                  child: Column(
+                    children: [
+                      FixtureCell(representation: _requirements.fixture),
+                      Container(
+                        padding: const EdgeInsets.only(top: 8, left: 4, right: 4, bottom: 4),
+                        color: Colors.black54,
+                        child: Text(
+                          'Cronología del Partido',
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.grey,
                           ),
                         ),
-                      );
-                    },
+                      ),
+                      Container(
+                        height: 1,
+                        color: Colors.grey,
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: state.resources.length,
+                          itemBuilder: (context, index) {
+                            final event = state.resources[index];
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                padding: EdgeInsets.all(8.0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(8),),
+                                  color: Colors.white,
+                                ),
+                                child: Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          SizedBox(
+                                            width: 30,
+                                            height: 30,
+                                            child: NetworkImageProvider.image(event.logo),
+                                          ),
+                                          const SizedBox(width: 16,),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(event.player.name),
+                                              Text(
+                                                event.team,
+                                                style: TextStyle(
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          _iconForType(event.type),
+                                          SizedBox(width: 8,),
+                                          Text(event.time,),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

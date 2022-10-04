@@ -30,9 +30,9 @@ class FixtureTableScreen extends StatelessWidget {
             return ResourceStatusScreen(
               state: state,
               loaderMessage: 'Cargando Partidos...',
-              successWidget: MatchTable(
-                representation: MatchTableRepresentation(
-                  content: state.resources.map((fixture) => MatchCellRepresentation(fixture: fixture)).toList(),
+              successWidget: FixtureTable(
+                representation: FixtureTableRepresentation(
+                  content: state.resources.map((fixture) => FixtureCellRepresentation(fixture: fixture)).toList(),
                 ),
               ),
             );
@@ -43,28 +43,28 @@ class FixtureTableScreen extends StatelessWidget {
   }
 }
 
-class MatchTableRepresentation {
-  MatchTableRepresentation({required this.content});
+class FixtureTableRepresentation {
+  FixtureTableRepresentation({required this.content});
 
-  final List<MatchCellRepresentation> content;
+  final List<FixtureCellRepresentation> content;
 }
 
-class MatchTable extends StatefulWidget {
-  const MatchTable({
+class FixtureTable extends StatefulWidget {
+  const FixtureTable({
     super.key,
     required this.representation,
   });
 
-  final MatchTableRepresentation representation;
+  final FixtureTableRepresentation representation;
 
   int get itemCount => representation.content.length;
-  MatchCellRepresentation itemAtIndex(int index) => representation.content[index];
+  FixtureCellRepresentation itemAtIndex(int index) => representation.content[index];
 
   @override
-  State<MatchTable> createState() => _MatchTableState();
+  State<FixtureTable> createState() => _FixtureTableState();
 }
 
-class _MatchTableState extends State<MatchTable> {
+class _FixtureTableState extends State<FixtureTable> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -80,20 +80,22 @@ class _MatchTableState extends State<MatchTable> {
                       padding: const EdgeInsets.only(left: 16.0, top: 8.0, right: 16.0, bottom: 8.0,),
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EventTableScreen(
-                                requirements: EventTableScreenRequirements(
-                                  values: {
-                                    EventTableScreenRequirements.fixtureIdKey: widget.itemAtIndex(index).id,
-                                  },
+                          if (widget.itemAtIndex(index).canSeeProgress) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EventTableScreen(
+                                  requirements: EventTableScreenRequirements(
+                                    values: {
+                                      EventTableScreenRequirements.fixtureKey: widget.itemAtIndex(index),
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
+                            );
+                          }
                         },
-                        child: MatchCell(
+                        child: FixtureCell(
                           representation: widget.itemAtIndex(index),
                         ),
                       ),
@@ -111,8 +113,8 @@ class _MatchTableState extends State<MatchTable> {
 }
 
 
-class MatchCellRepresentation {
-  MatchCellRepresentation({required this.fixture});
+class FixtureCellRepresentation {
+  FixtureCellRepresentation({required this.fixture});
 
   final Fixture fixture;
 
@@ -126,15 +128,16 @@ class MatchCellRepresentation {
   String get awayTeamGoals => fixture.away.goals != -1 ? fixture.away.goals.toString() : '-';
   String get stadium => fixture.stadium;
   String get round => fixture.round;
+  bool get canSeeProgress => fixture.status == FixtureStatus.inProgress || fixture.status == FixtureStatus.finished;
 }
 
-class MatchCell extends StatelessWidget {
-  const MatchCell({
+class FixtureCell extends StatelessWidget {
+  const FixtureCell({
     super.key,
     required this.representation,
   });
 
-  final MatchCellRepresentation representation;
+  final FixtureCellRepresentation representation;
 
   @override
   Widget build(BuildContext context) {
@@ -198,6 +201,13 @@ class MatchCell extends StatelessWidget {
               TeamView(team: representation.away),
             ],
           ),
+          if (representation.canSeeProgress)
+            Text(
+              'VER RESULTADOS',
+              style: TextStyle(
+                color: Colors.blueAccent,
+              ),
+            ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

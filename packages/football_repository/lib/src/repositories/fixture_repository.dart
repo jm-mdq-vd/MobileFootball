@@ -37,7 +37,7 @@ class FixtureRepository extends TimedClientCacheRepository<Fixture> {
           goals: fixture.goals.away ?? -1,
         ),
         stadium: fixture.fixture.venue.name ?? 'No Disponible',
-        isFinished: fixture.fixture.status.short == 'FT',
+        status: FixtureStatusX.fromValue(fixture.fixture.status.short),
       );
     }).toList();
 
