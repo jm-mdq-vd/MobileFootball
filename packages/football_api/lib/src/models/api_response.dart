@@ -41,4 +41,13 @@ class APIResponse<T> {
       response: fromJson(List.from(json['response'])),
     );
   }
+
+  static APIResponse status<T>(Map<String, dynamic> json, T Function(Map<String, dynamic> map) fromJson) {
+    return APIResponse<T>(
+      get: json['get'],
+      results: json['results'],
+      paging: Paging.fromJson(json['paging']),
+      response: [fromJson(json['response'])],
+    );
+  }
 }

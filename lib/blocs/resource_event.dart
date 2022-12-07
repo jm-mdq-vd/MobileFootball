@@ -9,6 +9,10 @@ class ResourceEvent<Resource> extends Equatable {
   List<Object?> get props => [parameters];
 }
 
+ResourceEvent<CountryInfo> getCountries() => ResourceEvent(
+  parameters: {},
+);
+
 ResourceEvent<League> getLeaguesByCountry(String country) => ResourceEvent(
   parameters: {
     'code': country,
@@ -26,10 +30,6 @@ ResourceEvent<Team> getTeamWithId(String id) => ResourceEvent(
   parameters: {
     'id': id,
   },
-);
-
-ResourceEvent<CountryInfo> getCountries() => ResourceEvent(
-  parameters: {},
 );
 
 ResourceEvent<StandingInfo> getStanding(String league, String season) => ResourceEvent(
@@ -62,7 +62,13 @@ ResourceEvent<Fixture> getFixturesByLeague(String leagueId, String season) => Re
 );
 
 ResourceEvent<Event> getEventsFromFixture(String fixtureId) => ResourceEvent(
-    parameters: {
-      'fixture': fixtureId,
-    },
+  parameters: {
+    'fixture': fixtureId,
+  },
+);
+
+ResourceEvent<Squad> getSquadByTeam(String teamId) => ResourceEvent(
+  parameters: {
+    'team': teamId,
+  },
 );

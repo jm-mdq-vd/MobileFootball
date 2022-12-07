@@ -73,10 +73,8 @@ String _statusCodeToString(int statusCode) {
   }
 }
 
-APIStatusCode _parseStatusCode(int statusCode)
-{
-  switch (statusCode)
-  {
+APIStatusCode _parseStatusCode(int statusCode) {
+  switch (statusCode) {
     case 200:
       return APIStatusCode.ok;
     case 204:
@@ -111,10 +109,6 @@ class FootballAPIClient implements ApiClient {
   final String _key = '0611975160523abb8507536bfd83172c';
   final String _apiHeaderKey = 'x-apisports-key';
 
-  final int _maxRequestPerDay = 100;
-  int _numberOfRequest = 0;
-  DateTime _lastRequestDate = DateTime.now();
-
   FootballAPIClient._privateConstructor();
 
   static final FootballAPIClient _instance = FootballAPIClient._privateConstructor();
@@ -126,7 +120,7 @@ class FootballAPIClient implements ApiClient {
     return _get<T>(
       endpointPath,
       parameters,
-          (list) => List<T>.from(list.map((object) => endpoint.parser(object))),
+          (list) => List<T>.from(list.map((object) => endpoint.parser(object),),),
     );
   }
 
@@ -134,14 +128,35 @@ class FootballAPIClient implements ApiClient {
       String path,
       Map<String, dynamic>? parameters,
       List<T> Function(List list) fromJson,) async {
-    // _numberOfRequest = !_lastRequestDate.isToday ? 0 : _numberOfRequest++;
-    // _lastRequestDate = DateTime.now();
 
-    if (_numberOfRequest == _maxRequestPerDay) {
+    /*
+    final http.BaseRequest statusRequest = _buildRequest(
+      'status',
+      parameters,
+    );
+
+    final statusResponse = await statusRequest.send();
+    final status = await _decodeStatusResponse(statusResponse);
+    
+    if (status.maxRequestsReached) {
       throw MaxNumberOfRequestsReached();
     }
+    */
 
-    final http.BaseRequest request = http.Request(
+    final http.BaseRequest request = _buildRequest(
+      path,
+      parameters,
+    );
+
+    request.headers.addAll({_apiHeaderKey: _key});
+    dev_tools.log(request.url.toString());
+
+    final streamedResponse = await request.send();
+    return _decodeResponse(streamedResponse, fromJson);
+  }
+  
+  http.BaseRequest _buildRequest(String path, Map<String, dynamic>? parameters,) {
+    return http.Request(
       _getMethod,
       Uri(
         scheme: _scheme,
@@ -150,11 +165,22 @@ class FootballAPIClient implements ApiClient {
         queryParameters: parameters ?? {},
       ),
     );
+  }
 
-    request.headers.addAll({_apiHeaderKey: _key});
-    dev_tools.log(request.url.toString());
+  Future<SubscriptionStatus> _decodeStatusResponse(http.StreamedResponse streamedResponse) async {
+    if (streamedResponse.statusCode == 200) {
+      final response = await http.Response.fromStream(streamedResponse);
+      final decodedJson = jsonDecode(response.body);
+      return APIResponse.status(decodedJson, Status.fromJson).response.first as SubscriptionStatus;
+    } else {
+      throw ServiceError(streamedResponse.statusCode);
+    }
+  }
 
-    final streamedResponse = await request.send();
+  Future<APIResponse> _decodeResponse<T>(
+      http.StreamedResponse streamedResponse,
+      List<T> Function(List list) fromJson) async {
+
     if (streamedResponse.statusCode == 200) {
       final response = await http.Response.fromStream(streamedResponse);
       final decodedJson = jsonDecode(response.body);
