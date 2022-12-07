@@ -3,26 +3,26 @@ import 'package:football_repository/football_repository.dart';
 import '../../widgets/generics/cells/cell_representable.dart';
 
 class LeagueCellViewModel implements CellRepresentable {
-  const LeagueCellViewModel({required this.league});
+  const LeagueCellViewModel({required League league}) : _league = league;
 
-  final League league;
-
-  @override
-  String get title => league.name;
+  final League _league;
 
   @override
-  String get id => league.id.toString();
+  String get title => _league.name;
 
   @override
-  String get semanticsLabel => league.name;
+  String get id => _league.id.toString();
 
   @override
-  String get imageURL => league.logo;
+  String get semanticsLabel => _league.name;
 
   @override
-  String get searchValue => league.name;
+  String get imageURL => _league.logo;
 
-  bool get isCup => league.isCup;
+  @override
+  String get searchValue => _league.name;
 
-  List<LeagueSeason> get seasons => league.seasons;
+  bool get isCup => _league.isCup;
+
+  List<LeagueSeason> get seasons => _league.seasons;
 }

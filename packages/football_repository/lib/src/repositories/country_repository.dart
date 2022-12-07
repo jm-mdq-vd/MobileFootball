@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' as devlog;
 import 'package:football_api/football_api.dart';
 
 import '../models/country/country_info.dart';

@@ -1,20 +1,20 @@
 import 'package:football_repository/football_repository.dart';
 
-import '../../widgets/generics/cells/cell_representable.dart';
+import 'package:mobile_football/widgets/generics/cells/cell_representable.dart';
 
 class SeasonCellViewModel implements BaseCellRepresentable {
-  const SeasonCellViewModel({required this.season});
+  const SeasonCellViewModel({required LeagueSeason season}) : _season = season;
 
-  final LeagueSeason season;
-
-  @override
-  String get title => season.year.toString();
+  final LeagueSeason _season;
 
   @override
-  String get id => season.year.toString();
+  String get title => _season.year.toString();
 
-  bool get showEvents => season.hasEvents;
-  bool get showLineups => season.hasLineups;
-  bool get showPlayersStatistics => season.hasPlayersStatistics;
-  bool get showFixturesStatistics => season.hasFixturesStatistics;
+  @override
+  String get id => _season.year.toString();
+
+  bool get showEvents => _season.hasEvents;
+  bool get showLineups => _season.hasLineups;
+  bool get showPlayersStatistics => _season.hasPlayersStatistics;
+  bool get showFixturesStatistics => _season.hasFixturesStatistics;
 }

@@ -1,5 +1,29 @@
 import 'package:equatable/equatable.dart';
-import 'package:football_api/football_api.dart';
+
+enum Position {
+  goalkeeper,
+  defender,
+  midfielder,
+  attacker,
+  unknown
+}
+
+extension PositionX on Position {
+  static Position from(String position) {
+    switch (position) {
+      case "Goalkeeper":
+        return Position.goalkeeper;
+      case "Defender":
+        return Position.defender;
+      case "Midfielder":
+        return Position.midfielder;
+      case "Attacker":
+        return Position.attacker;
+      default:
+        return Position.unknown;
+    }
+  }
+}
 
 class BasicPlayerInfo extends Equatable {
   BasicPlayerInfo({
@@ -29,7 +53,7 @@ class Player extends BasicPlayerInfo {
 
   final int? age;
   final int? number;
-  final String position;
+  final Position position;
   final String? photo;
 
   @override

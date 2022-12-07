@@ -3,22 +3,22 @@ import 'package:football_repository/football_repository.dart';
 import '../../widgets/generics/cells/cell_representable.dart';
 
 class CountryCellViewModel implements CellRepresentable {
-  const CountryCellViewModel({required this.country});
+  const CountryCellViewModel({required CountryInfo country}) : _country = country;
 
-  final CountryInfo country;
-
-  @override
-  String get title => country.name;
+  final CountryInfo _country;
 
   @override
-  String get id => country.code ?? 'Unknown';
+  String get title => _country.name;
 
   @override
-  String get semanticsLabel => country.name;
+  String get id => _country.code ?? 'Unknown';
 
   @override
-  String get imageURL => country.flag ?? '';
+  String get semanticsLabel => _country.name;
 
   @override
-  String get searchValue => country.name;
+  String get imageURL => _country.flag ?? '';
+
+  @override
+  String get searchValue => _country.name;
 }

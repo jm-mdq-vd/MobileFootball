@@ -79,6 +79,7 @@ class GeneralTeamInfo extends Equatable {
     required this.team,
     required this.status,
     required this.results,
+    required this.group,
   });
 
   final int rank;
@@ -86,6 +87,7 @@ class GeneralTeamInfo extends Equatable {
   final Team team;
   final Status status;
   final MatchesResult results;
+  final String? group;
 
   @override
   List<Object> get props => [
@@ -113,7 +115,7 @@ class StandingInfo extends Equatable {
   final String logo;
   final String flag;
   final int season;
-  final List<GeneralTeamInfo> teams;
+  final List<List<GeneralTeamInfo>> teams;
 
   @override
   List<Object> get props => [

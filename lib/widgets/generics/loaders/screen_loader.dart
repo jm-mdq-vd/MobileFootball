@@ -10,7 +10,7 @@ class ScreenLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     return Container(
+    return Container(
       color: Colors.white,
       child: Center(
         child: Column(
@@ -20,7 +20,9 @@ class ScreenLoader extends StatelessWidget {
             CircularProgressIndicator(
               color: Colors.black,
             ),
-            SizedBox(height: 16,),
+            SizedBox(
+              height: 16,
+            ),
             Text(
               message,
               textAlign: TextAlign.center,

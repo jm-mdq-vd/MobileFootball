@@ -7,3 +7,5 @@ abstract class NavigationState extends Equatable {
 
 class InCountrySelection extends NavigationState {}
 class InLeagueSelection extends NavigationState {}
+class InSeasonSelection extends NavigationState {}
+class InMainScreen extends NavigationState {}

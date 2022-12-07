@@ -13,4 +13,5 @@ export 'season/season.dart';
 export 'standing/team_standing.dart';
 export 'standing/standing.dart';
 export 'venue/venue.dart';
+export 'status/subscription_status.dart';
 export 'api_response.dart';

@@ -48,6 +48,7 @@ extension FixtureStatusX on FixtureStatus {
       case 'BT':
       case 'ET':
       case 'P':
+      case 'LIVE':
         return FixtureStatus.inProgress;
       case 'FT':
       case 'AET':

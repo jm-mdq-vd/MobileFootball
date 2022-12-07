@@ -12,3 +12,11 @@ abstract class NavigationEvent extends Equatable {
 class GoToLeague extends NavigationEvent {
   GoToLeague({required super.parameters});
 }
+
+class GoToSeasonSelection extends NavigationEvent {
+  GoToSeasonSelection({required super.parameters});
+}
+
+class GoToMainScreen extends NavigationEvent {
+  GoToMainScreen({required super.parameters});
+}

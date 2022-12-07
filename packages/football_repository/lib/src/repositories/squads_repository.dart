@@ -18,7 +18,7 @@ class SquadsRepository extends TimedClientCacheRepository<Squad> {
           name: player.name,
           age: player.age,
           number: player.number,
-          position: player.position,
+          position: PositionX.from(player.position),
           photo: player.photo,
         ),
     ).toList();

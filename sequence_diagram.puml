@@ -3,9 +3,49 @@
 
 autonumber
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+actor User
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+User -> CountriesGridScreen: Open the app
+
+CountriesGridScreen -> RepositoryProvider ++: RepositoryProvider(create: createRepository, child: Widget)
+
+RepositoryProvider -> MultiBlocProvider ++: MultiBlocProvider(providers: [BlocProvider], child: BlocBuilder<Bloc, State>)
+
+MultiBlocProvider -> BlocProvider ++: BlocProvider(create: createResourceBloc)
+
+BlocProvider -> BuildContext ++: read<CountryRepository>()
+return countryRepository
+BlocProvider -> ResourceBloc ++: ResourceBloc(countryRepository)
+return resourceBloc
+return resourceBlocProvider
+
+BlocProvider -> NavigationBloc ++: NavigationBloc(context)
+return navigationBloc
+
+MultiBlocProvider -> BlocBuilder ++: BlocBuilder
+BlocBuilder -> GridScreen ++: create(state)
+return gridScreen
+
+return blocBuilder
+
+return multiBlocProvider
+
+return repositoryProvider
+
+User -> CountriesGridScreen: Taps on a cell
+
+CountriesGridScreen -> GridScreen ++: onSelection(selectedItem)
+GridScreen -> BuildContext ++: read<NavigationBloc>()
+return navigationBloc
+GridScreen -> NavigationBloc ++: add(GoToLeague(requirements))
+NavigationBloc -> NavigationBloc: mapEventToState(event, emitter)
+NavigationBloc -> LeagueGridScreenRequirements ++: LeagueGridScreenRequirements(eventParameters)
+return leagueGridScreenRequirements
+NavigationBloc -> LeagueGridScreen ++: LeagueGridScreen(leagueGridScreenRequirements)
+return leagueGridScreen
+NavigationBloc -> MaterialRoutePage ++: MaterialRoutePage(leagueGridScreen)
+return materialRoutePage
+NavigationBloc -> Navigator: push(context, materialRoutePage)
+NavigationBloc -> NavigationBloc: emit(InLeagueSelection)
+
 @enduml

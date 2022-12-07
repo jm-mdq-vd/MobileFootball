@@ -135,8 +135,10 @@ class FixtureCell extends StatelessWidget {
   const FixtureCell({
     super.key,
     required this.representation,
+    this.borderRadius = 12,
   });
 
+  final double borderRadius;
   final FixtureCellRepresentation representation;
 
   @override
@@ -145,7 +147,7 @@ class FixtureCell extends StatelessWidget {
       height: 160,
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(12),),
+          borderRadius: BorderRadius.all(Radius.circular(borderRadius),),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,

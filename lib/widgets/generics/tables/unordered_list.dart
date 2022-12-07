@@ -4,18 +4,44 @@ import 'table_representation.dart';
 import '../cells/cell.dart';
 import '../cells/cell_representable.dart';
 
+
+class TableScreen extends StatelessWidget {
+  const TableScreen({
+    super.key,
+    required TableRepresentation representation,
+    Function(BaseCellRepresentable cell)? onSelection,
+  }) : _representation = representation, _onSelection = onSelection;
+
+  final TableRepresentation _representation;
+  final Function(BaseCellRepresentable cell)? _onSelection;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_representation.title),
+      ),
+      body: UnorderedList(
+        representation: _representation,
+        onSelection: _onSelection,
+      ),
+    );
+  }
+}
+
+
 class UnorderedList extends StatefulWidget {
   const UnorderedList({
     super.key,
     required this.representation,
     this.onSelection = null,
+    this.isScrollable = true,
   });
 
   final TableRepresentation representation;
-
   final Function(BaseCellRepresentable cell)? onSelection;
+  final bool isScrollable;
 
-  String get title => representation.title;
   int get itemCount => representation.content.length;
   BaseCellRepresentable itemAtIndex(int index) => representation.content[index];
 
@@ -35,37 +61,28 @@ class _UnorderedListState extends State<UnorderedList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.title),),
-      body: Container(
-        color: const Color(0xB9EEECEC),
-        child: Column(
-          children: [
-            Expanded(
-              child: ListView.separated(
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      if (mounted) {
-                        setState(() {
-                          _selectedIndex = index;
-                        });
-                        widget.itemSelectedAtIndex(index);
-                      }
-                    },
-                    child: Cell(
-                      model: widget.itemAtIndex(index),
-                      isSelected: _selectedIndex == index,
-                    ),
-                  );
-                },
-                itemCount: widget.itemCount,
-                separatorBuilder: (BuildContext context, int index) => Container(height: 1, color: Colors.grey,),
-              ),
-            ),
-          ],
-        ),
-      ),
+    return ListView.separated(
+      shrinkWrap: true,
+      primary: widget.isScrollable,
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () {
+            if (mounted) {
+              setState(() {
+                _selectedIndex = index;
+              });
+              widget.itemSelectedAtIndex(index);
+            }
+          },
+          child: Cell(
+            model: widget.itemAtIndex(index),
+            isSelected: _selectedIndex == index,
+          ),
+        );
+      },
+      itemCount: widget.itemCount,
+      separatorBuilder: (BuildContext context, int index) => Container(height: 1, color: Colors.grey,),
+      // physics: widget.isScrollable ? null : NeverScrollableScrollPhysics(),
     );
   }
 }

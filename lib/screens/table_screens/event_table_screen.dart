@@ -89,21 +89,38 @@ class EventTableScreen extends StatelessWidget {
                   color: const Color(0xB9EEECEC),
                   child: Column(
                     children: [
-                      FixtureCell(representation: _requirements.fixture),
                       Container(
+                        height: 16,
+                        color: Colors.white,
+                      ),
+                      FixtureCell(
+                        representation: _requirements.fixture,
+                        borderRadius: 0,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
                         padding: const EdgeInsets.only(top: 8, left: 4, right: 4, bottom: 4),
-                        color: Colors.black54,
                         child: Text(
                           'Cronología del Partido',
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 24,
                             color: Colors.grey,
                           ),
                         ),
-                      ),
-                      Container(
-                        height: 1,
-                        color: Colors.grey,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(16),
+                            bottomRight: Radius.circular(16),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              offset: Offset(0, 1),
+                            ),
+                          ],
+                        ),
                       ),
                       Expanded(
                         child: ListView.builder(

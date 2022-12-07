@@ -10,8 +10,8 @@ class StandingsRepository extends TimedClientCacheRepository<StandingInfo> {
 
   Future<List<StandingInfo>> getResource(Map<String, dynamic> parameters) async {
     final standings = await getResults<Standing>(Endpoint.standings, parameters,);
-    List<StandingInfo> list = standings.map((standing) {
-      final teams = standing.league.standings.first;
+    List<StandingInfo> listOfStandings = standings.map((standing) {
+      final groups = standing.league.standings;
       return StandingInfo(
         id: standing.league.id,
         name: standing.league.name,
@@ -19,23 +19,32 @@ class StandingsRepository extends TimedClientCacheRepository<StandingInfo> {
         logo: standing.league.logo,
         flag: standing.league.flag,
         season: standing.league.season,
-        teams: teams.map((team) => GeneralTeamInfo(
-          rank: team.rank,
-          points: team.points,
-          team: Team(
-            id: team.team.id,
-            name: team.team.name,
-            logo: team.team.logo,
-            country: '',
-          ),
-          status: StatusX.from(team.status),
-          results: MatchesResult(
-            played: team.all.played,
-            win: team.all.win,
-            draw: team.all.draw,
-            lose: team.all.lose,
-          ),
-        )).toList(),
+        teams: groups.map((group) {
+          List<GeneralTeamInfo> groupedTeams = [];
+          for (final team in group) {
+            final info = GeneralTeamInfo(
+              rank: team.rank,
+              points: team.points,
+              team: Team(
+                id: team.team.id,
+                name: team.team.name,
+                logo: team.team.logo,
+                country: '',
+              ),
+              status: StatusX.from(team.status),
+              results: MatchesResult(
+                played: team.all.played,
+                win: team.all.win,
+                draw: team.all.draw,
+                lose: team.all.lose,
+              ),
+              group: team.group,
+            );
+            groupedTeams.add(info);
+          }
+
+          return groupedTeams;
+        }).toList(),
       );
     }).toList();
 
@@ -46,6 +55,6 @@ class StandingsRepository extends TimedClientCacheRepository<StandingInfo> {
       saveWithTimeout: true,
     );
 
-    return list;
+    return listOfStandings;
   }
 }

@@ -1,12 +1,15 @@
+import 'dart:developer' as dev_tools;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:football_repository/football_repository.dart';
 
 import 'package:mobile_football/blocs/resource_bloc.dart';
 import 'package:mobile_football/blocs/resource_status.dart';
-import 'package:mobile_football/widgets/generics/loaders/screen_loader.dart';
-import 'package:mobile_football/widgets/generics/messages/no_results.dart';
+import 'package:mobile_football/screens/resource_status_screen.dart';
+import 'package:mobile_football/widgets/generics/messages_screens.dart';
 import 'package:mobile_football/widgets/texts/texts.dart';
+import 'package:mobile_football/widgets/buttons/action_button.dart';
 import 'package:mobile_football/screens/details/team_details_screen.dart';
 import 'package:mobile_football/view_models/team_rank_row_view_model.dart';
 import 'package:mobile_football/utility/network_image_provider.dart';
@@ -20,92 +23,6 @@ class StandingTableScreen extends StatelessWidget {
 
   final LeagueSeasonRequirements _requirements;
 
-  Widget _widgetForState(ResourceState<StandingInfo> state) {
-    if (state.status.isLoading) {
-      return ScreenLoader(message: 'Cargando Posiciones...',);
-    }
-
-    if (state.status.isSuccess) {
-      if (state.resources.isEmpty) {
-        return const NoResults();
-      }
-
-      return Container(
-        color: Color(0xFFDCDCDC),
-        child: ListView(
-          children: [
-            SizedBox(height: 80,),
-            StandingsHeader(
-              title: _requirements.title,
-              season: _requirements.season,
-            ),
-            Column(
-              children: state.resources.first.teams.map((team) {
-                final index = state.resources.first.teams.indexOf(team);
-                return RankRow(
-                  representation: TeamRankRowViewModel(
-                    team: team,
-                    leagueId: _requirements.leagueId,
-                    seasonId: _requirements.season,
-                  ),
-                  index: index,
-                );
-              }).toList(),
-            ),
-            Container(height: 1, color: Colors.grey,),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8,
-                vertical: 24
-              ),
-              height: 108,
-              decoration: BoxDecoration(
-                color: Color(0xFFF6F6F6),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(16),
-                  bottomRight: Radius.circular(16),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      BoldText('J: Partidos Jugados'),
-                      SizedBox(height: 16,),
-                      BoldText('G: Ganados'),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      BoldText('E: Empates'),
-                      SizedBox(height: 16,),
-                      BoldText('P: Perdidos'),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      BoldText('PTS: Puntos'),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ]
-        ),
-      );
-    }
-
-    return ScreenLoader(message: 'Cargando posiciones para ${_requirements.title}...',);
-  }
-
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider<StandingsRepository>(
@@ -115,7 +32,29 @@ class StandingTableScreen extends StatelessWidget {
           repository: context.read<StandingsRepository>(),
         )..add(getStanding(_requirements.leagueId, _requirements.season)),
         child: BlocBuilder<ResourceBloc<StandingInfo>, ResourceState<StandingInfo>>(
-          builder: (context, state) => _widgetForState(state),
+          builder: (context, state) {
+            if (state.status.isInitial || state.status.isLoading) return ScreenLoader(message: 'Cargando posiciones para ${_requirements.title}...',);
+
+            final standing = state.resources.first;
+            List<StandingsGroupView> standingViews = standing.teams.map((group) {
+              return StandingsGroupView(
+                headline: group.first.group,
+                requirements: _requirements,
+                teams: group,
+              );
+            }).toList();
+
+            return ResourceStatusScreen(
+              state: state,
+              loaderMessage: 'Cargando posiciones para ${_requirements.title}...',
+              successWidget: Container(
+                color: Color(0xFFDCDCDC),
+                child: ListView(
+                  children: standingViews,
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -124,13 +63,13 @@ class StandingTableScreen extends StatelessWidget {
 
 class StandingsHeader extends StatelessWidget {
   const StandingsHeader({
-    Key? key,
+    super.key,
     required this.title,
-    required this.season,
-  }) : super(key: key);
+    this.groupDescription,
+  });
 
   final String title;
-  final String season;
+  final String? groupDescription;
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +77,7 @@ class StandingsHeader extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.all(8),
-          height: 55,
+          height: 70,
           decoration: BoxDecoration(
             color: Color(0xFFF6F6F6),
             borderRadius: BorderRadius.only(
@@ -155,13 +94,22 @@ class StandingsHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '$title $season',
+                      title,
                       style: TextStyle(
                         color: Colors.grey,
                         fontSize: 12,
                       ),
                     ),
-                    SizedBox(height: 4,),
+                    const SizedBox(height: 4,),
+                    if (groupDescription != null)
+                      Text(
+                        '(${groupDescription!})',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                        ),
+                      ),
+                      const SizedBox(height: 4,),
                     const UnderlinedBoldText('CLUB',),
                   ],
                 ),
@@ -204,7 +152,6 @@ class RankRow extends StatelessWidget {
   final int index;
   final RankRowRepresentable representation;
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -225,8 +172,8 @@ class RankRow extends StatelessWidget {
           _statusToIcon(representation.status),
           Container(
             width: 100,
-            child: GestureDetector(
-              onTap: () {
+            child: ActionButton(
+              action: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -238,14 +185,7 @@ class RankRow extends StatelessWidget {
                   ),
                 );
               },
-              child: Text(
-                representation.name,
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  overflow: TextOverflow.fade,
-                  color: Colors.blue,
-                ),
-              ),
+              labelText: representation.name,
             ),
           ),
           Container(
@@ -290,5 +230,92 @@ class RankRow extends StatelessWidget {
           color: Colors.red,
         );
     }
+  }
+}
+
+class StandingsGroupView extends StatelessWidget {
+  const StandingsGroupView({
+    super.key,
+    required String? headline,
+    required LeagueSeasonRequirements requirements,
+    required List<GeneralTeamInfo> teams,
+  }) : _headline = headline,  _requirements = requirements, _teams = teams;
+
+  final String? _headline;
+  final LeagueSeasonRequirements _requirements;
+  final List<GeneralTeamInfo> _teams;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          SizedBox(height: 80,),
+          StandingsHeader(
+            title: '${_requirements.title} ${_requirements.season}',
+            groupDescription: _headline,
+          ),
+          Column(
+            children: _teams.map((team) {
+              final index = _teams.indexOf(team);
+              return RankRow(
+                representation: TeamRankRowViewModel(
+                  team: team,
+                  leagueId: _requirements.leagueId,
+                  seasonId: _requirements.season,
+                ),
+                index: index,
+              );
+            }).toList(),
+          ),
+          Container(height: 1, color: Colors.grey,),
+          Container(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 24
+            ),
+            height: 108,
+            decoration: BoxDecoration(
+              color: Color(0xFFF6F6F6),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(16),
+                bottomRight: Radius.circular(16),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    BoldText('J: Partidos Jugados'),
+                    SizedBox(height: 16,),
+                    BoldText('G: Ganados'),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    BoldText('E: Empates'),
+                    SizedBox(height: 16,),
+                    BoldText('P: Perdidos'),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    BoldText('PTS: Puntos'),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

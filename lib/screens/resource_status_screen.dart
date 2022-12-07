@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:mobile_football/blocs/resource_status.dart';
 import 'package:mobile_football/blocs/resource_bloc.dart';
-import 'package:mobile_football/widgets/generics/loaders/screen_loader.dart';
+import 'package:mobile_football/widgets/generics/messages_screens.dart';
 
 class ResourceStatusScreen<T> extends StatelessWidget {
   const ResourceStatusScreen({
@@ -18,16 +18,17 @@ class ResourceStatusScreen<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (state.status.isLoading) {
-      return ScreenLoader(message: loaderMessage,);
-    }
+    if (state.status.isInitial || state.status.isLoading) return ScreenLoader(message: loaderMessage,);
+
+    if (state.status.isError) return ErrorScreen();
 
     if (state.status.isSuccess) {
-      if (state.resources.isNotEmpty) {
-        return successWidget;
+      if (state.resources.isEmpty) {
+        return NoResults();
       }
+      return successWidget;
     }
 
-    return Container();
+    throw 'Unknown status ${state.status}';
   }
 }
