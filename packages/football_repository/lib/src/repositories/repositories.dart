@@ -6,4 +6,5 @@ export 'statistics_repository.dart';
 export 'fixture_repository.dart';
 export 'event_repository.dart';
 export 'squads_repository.dart';
+export 'player_repository.dart';
 export 'repository.dart';

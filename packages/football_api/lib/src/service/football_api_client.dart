@@ -184,8 +184,10 @@ class FootballAPIClient implements ApiClient {
     if (streamedResponse.statusCode == 200) {
       final response = await http.Response.fromStream(streamedResponse);
       final decodedJson = jsonDecode(response.body);
+      dev_tools.log('Decoded Result: ${decodedJson['response']}');
       return APIResponse.fromJson(decodedJson, fromJson);
     } else {
+      dev_tools.log('API Client Failed ${streamedResponse.statusCode}');
       throw ServiceError(streamedResponse.statusCode);
     }
   }

@@ -23,6 +23,24 @@ class BasicPlayerInfo implements Deserializable {
 }
 
 @JsonSerializable()
+class BirthInfo implements Deserializable {
+  BirthInfo({
+    required this.date,
+    required this.place,
+    required this.country,
+  });
+
+  final String? date;
+  final String? place;
+  final String? country;
+
+  factory BirthInfo.fromJson(Map<String, dynamic> json) => _$BirthInfoFromJson(json);
+
+  @override
+  BirthInfo Function(Map<String, dynamic> object) get deserialize => BirthInfo.fromJson;
+}
+
+@JsonSerializable()
 class Player extends BasicPlayerInfo implements Deserializable {
   Player({
     required super.id,
@@ -35,16 +53,18 @@ class Player extends BasicPlayerInfo implements Deserializable {
     required this.weight,
     required this.injured,
     required this.photo,
+    required this.birth,
   });
 
   final String firstname;
   final String lastname;
-  final int age;
+  final int? age;
   final String nationality;
   final String height;
   final String weight;
   final bool injured;
   final String photo;
+  final BirthInfo birth;
 
   factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
 
@@ -72,11 +92,11 @@ class PlayerStatistics implements Deserializable {
 class PlayerInfo implements Deserializable {
   PlayerInfo({
     required this.player,
-    required this.statistics,
+    // required this.statistics,
   });
 
   final Player player;
-  final PlayerStatistics statistics;
+  // final List<PlayerStatistics> statistics;
 
   factory PlayerInfo.fromJson(Map<String, dynamic> json) => _$PlayerInfoFromJson(json);
 

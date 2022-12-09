@@ -8,3 +8,4 @@ export 'standing/standing_info.dart';
 export 'fixtures/fixture.dart';
 export 'fixtures/event.dart';
 export 'player/player.dart';
+export 'player/player_detail.dart';

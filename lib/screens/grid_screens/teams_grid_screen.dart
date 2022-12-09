@@ -42,9 +42,13 @@ class TeamsGridScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => TeamDetailScreen(
-                        league: _requirements.leagueId,
-                        season: _requirements.season,
-                        id: selectedTeam.id,
+                        requirements: TeamDetailScreenRequirements(
+                          values: {
+                            TeamDetailScreenRequirements.leagueKey: _requirements.leagueId,
+                            TeamDetailScreenRequirements.seasonKey: _requirements.season,
+                            TeamDetailScreenRequirements.teamIdKey: selectedTeam.id,
+                          },
+                        ),
                       ),
                     ),
                   );

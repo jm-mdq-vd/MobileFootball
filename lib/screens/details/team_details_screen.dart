@@ -6,21 +6,33 @@ import 'package:football_repository/football_repository.dart';
 import 'package:mobile_football/blocs/resource_bloc.dart';
 import 'package:mobile_football/blocs/resource_status.dart';
 import 'package:mobile_football/screens/table_screens/squad_table_screen.dart';
+import 'package:mobile_football/screens/screen_requirements.dart';
 import 'package:mobile_football/widgets/generics/loaders/screen_loader.dart';
 import 'package:mobile_football/widgets/buttons/action_button.dart';
 import 'package:mobile_football/utility/network_image_provider.dart';
 
+class TeamDetailScreenRequirements implements ScreenRequirements {
+  TeamDetailScreenRequirements({required Map<String, dynamic> values}) : _values = values;
+
+  static String get teamIdKey => 'teamId';
+  static String get leagueKey => 'leagueId';
+  static String get seasonKey => 'season';
+
+  @override
+  Map<String, dynamic> _values;
+
+  String get teamId => _values[teamIdKey];
+  String get leagueId => _values[leagueKey];
+  String get season => _values[seasonKey];
+}
+
 class TeamDetailScreen extends StatelessWidget {
   const TeamDetailScreen({
     super.key,
-    required this.league,
-    required this.season,
-    required this.id,
-  });
+    required TeamDetailScreenRequirements requirements,
+  }) : _requirements = requirements;
 
-  final String league;
-  final String season;
-  final String id;
+  final TeamDetailScreenRequirements _requirements;
 
   Widget _buildScreen(BuildContext context, ResourceState<Team> state) {
     if (state.status.isLoading) {
@@ -119,7 +131,7 @@ class TeamDetailScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => SquadTableScreen(teamId: id,),
+                            builder: (context) => SquadTableScreen(requirements: _requirements,),
                           ),
                         );
                       },
@@ -148,7 +160,7 @@ class TeamDetailScreen extends StatelessWidget {
       child: BlocProvider<ResourceBloc<Team>>(
         create: (context) => ResourceBloc(
           repository: context.read<TeamRepository>(),
-        )..add(getTeamWithId(id)),
+        )..add(getTeamWithId(_requirements.teamId)),
         child: BlocBuilder<ResourceBloc<Team>, ResourceState<Team>>(
           builder: (context, state) => _buildScreen(context, state),
         ),

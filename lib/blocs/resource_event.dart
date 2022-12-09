@@ -72,3 +72,10 @@ ResourceEvent<Squad> getSquadByTeam(String teamId) => ResourceEvent(
     'team': teamId,
   },
 );
+
+ResourceEvent<PlayerDetail> getPlayerDetails(String id, String season) => ResourceEvent(
+  parameters: {
+    'id': id,
+    'season': season,
+  },
+);

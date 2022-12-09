@@ -84,6 +84,13 @@ class StandingsHeader extends StatelessWidget {
               topLeft: Radius.circular(16),
               topRight: Radius.circular(16),
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 3.5,
+                offset: Offset(1, -2.5,),
+              ),
+            ],
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -178,9 +185,13 @@ class RankRow extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => TeamDetailScreen(
-                      id: representation.id,
-                      league: (representation as TeamRankRowViewModel).leagueId,
-                      season: (representation as TeamRankRowViewModel).seasonId,
+                      requirements: TeamDetailScreenRequirements(
+                        values: {
+                          TeamDetailScreenRequirements.teamIdKey: representation.id,
+                          TeamDetailScreenRequirements.leagueKey: (representation as TeamRankRowViewModel).leagueId,
+                          TeamDetailScreenRequirements.seasonKey: (representation as TeamRankRowViewModel).seasonId
+                        },
+                      ),
                     ),
                   ),
                 );
@@ -281,6 +292,12 @@ class StandingsGroupView extends StatelessWidget {
                 bottomLeft: Radius.circular(16),
                 bottomRight: Radius.circular(16),
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black,
+                  blurRadius: 1.5,
+                ),
+              ],
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -5,8 +5,10 @@ import 'package:football_repository/football_repository.dart';
 import 'package:mobile_football/blocs/resource_bloc.dart';
 import 'package:mobile_football/blocs/navigation/navigation_bloc.dart';
 import 'package:mobile_football/blocs/resource_status.dart';
+import 'package:mobile_football/screens/details/team_details_screen.dart';
 import 'package:mobile_football/widgets/generics/tables/table_representation.dart';
 import 'package:mobile_football/widgets/generics/messages_screens.dart';
+import 'package:mobile_football/screens/details/player_details_screen.dart';
 
 import 'package:mobile_football/widgets/generics/tables/unordered_list.dart';
 import 'package:mobile_football/screens/resource_status_screen.dart';
@@ -15,10 +17,10 @@ import 'package:mobile_football/view_models/cells/player_cell_view_model.dart';
 class SquadTableScreen extends StatelessWidget {
   const SquadTableScreen({
     super.key,
-    required String teamId,
-  }) : _teamId = teamId;
+    required TeamDetailScreenRequirements requirements,
+  }) : _requirements = requirements;
 
-  final String _teamId;
+  final TeamDetailScreenRequirements _requirements;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class SquadTableScreen extends StatelessWidget {
           BlocProvider<ResourceBloc<Squad>>(
             create: (context) => ResourceBloc(
               repository: context.read<SquadsRepository>(),
-            )..add(getSquadByTeam(_teamId)),
+            )..add(getSquadByTeam(_requirements.teamId)),
           ),
           BlocProvider<NavigationBloc>(
             create: (context) => NavigationBloc(context: context),
@@ -63,14 +65,29 @@ class SquadTableScreen extends StatelessWidget {
                             SectionHeader(title: entry.value,),
                             UnorderedList(
                               representation: TableRepresentation(
-                                id: _teamId,
+                                id: _requirements.teamId,
                                 title: '',
                                 content: state.resources.first.players
                                     .where((player) => player.position == entry.key)
                                     .map((player) => PlayerCellViewModel(player: player)).toList(),
                               ),
                               onSelection: (selectedItem) {
-
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) {
+                                      return PlayerDetailsScreen(
+                                        requirements: PlayerDetailsScreenRequirements(
+                                          values: {
+                                            PlayerDetailsScreenRequirements.titleKey: selectedItem.title,
+                                            PlayerDetailsScreenRequirements.seasonKey: _requirements.season,
+                                            PlayerDetailsScreenRequirements.playerIdKey: selectedItem.id,
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
                               },
                               isScrollable: false,
                             ),
