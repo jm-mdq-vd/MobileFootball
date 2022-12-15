@@ -8,6 +8,7 @@ class LeagueSeasonRequirements implements ScreenRequirements {
   static String get titleKey => 'title';
   static String get leagueKey => 'leagueId';
   static String get seasonKey => 'season';
+  static String get teamKey => 'teamId';
 
   @override
   Map<String, dynamic> _values;
@@ -15,4 +16,5 @@ class LeagueSeasonRequirements implements ScreenRequirements {
   String get title => _values[titleKey];
   String get leagueId => _values[leagueKey];
   String get season => _values[seasonKey];
+  String get teamId => _values[teamKey];
 }

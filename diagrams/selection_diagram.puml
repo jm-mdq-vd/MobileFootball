@@ -1,0 +1,71 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor User
+
+User -> App: Selects a country
+
+CountriesGridScreen -> GridScreen: 'onSelection' handler is called with the selected country
+GridScreen -> BuildContext ++: Reads the context to get NavigationBloc
+return navigationBloc
+
+GridScreen -> NavigationBloc: Go to league event is created with the selected country
+NavigationBloc -> NavigationBloc: Maps the event into a navigation state
+NavigationBloc -> Navigator: Creates a material page route with the league grid widget
+Navigator -> MaterialPageRoute ++: Builds the widget
+return leaguesGridScreen
+NavigationBloc -> NavigationBloc: Emits the mapped event
+
+LeaguesGridScreen -> LeaguesGridScreen ++: Builds its contents
+LeaguesGridScreen -> RepositoryProvider: Creates an instance of a repository provider
+RepositoryProvider -> RepositoryProvider ++: Creates the league repository
+return leagueRepository
+
+RepositoryProvider -> RepositoryProvider: Instance a MultiBlocProvider
+MultiBlocProvider -> MultiBlocProvider: Instance a bloc provider for the resource
+BlocProvider -> BlocProvider ++: Creates a ResourceBloc
+BlocProvider -> BuildContext ++: Reads the context to get the LeagueRepository
+return leagueRepository
+return resourceBloc
+ResourceBloc -> ResourceBloc: Adds the 'getLeaguesByCountry' event
+ResourceBloc -> ResourceBloc: Maps the event into an ResourceState
+ResourceBloc -> ResourceBloc: Emits the loading state
+hnote over ResourceBloc: Loading
+ResourceBloc -> LeaguesGridScreen: Builds the widget with loading state
+ResourceBloc -> LeagueRepository ++: Calls to 'getResource' and passes the event parameters
+LeagueRepository -> LeagueRepository ++: Tries to get the results from the leagues endpoint
+LeagueRepository -> LeagueRepository ++: It tries to get the resources from the cache
+LeagueRepository -> CacheRepository ++: Checks if there's info saved for the request
+return cachedResults
+
+alt #LightBlue Is not Null
+    return cachedResults
+else #Pink Is Null
+    LeagueRepository -> ApiClient ++: Tries to get the response from the API
+    return results or error
+end
+
+return results
+
+LeagueRepository -> CacheRepository: Saves the results
+LeagueRepository -> League: Creates a instance of League for each data
+return leagues
+
+alt #LightBlue Success
+    ResourceBloc -> ResourceBloc: Emits the success state
+    hnote over ResourceBloc: Success
+    ResourceBloc -> LeaguesGridScreen: Re-builds the widget with success state
+else #Pink Failed
+    ResourceBloc -> ResourceBloc: Emits the error state
+    hnote over ResourceBloc: Error
+    ResourceBloc -> LeaguesGridScreen: Re-builds the widget with error state
+end
+
+MultiBlocProvider -> BlocBuilder ++: Creates bloc builder
+BlocBuilder -> ResourceStatusScreen: Creates resource status screen
+return resourceStatusScreen
+return repositoryProvider
+
+@enduml

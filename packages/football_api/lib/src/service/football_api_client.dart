@@ -129,20 +129,6 @@ class FootballAPIClient implements ApiClient {
       Map<String, dynamic>? parameters,
       List<T> Function(List list) fromJson,) async {
 
-    /*
-    final http.BaseRequest statusRequest = _buildRequest(
-      'status',
-      parameters,
-    );
-
-    final statusResponse = await statusRequest.send();
-    final status = await _decodeStatusResponse(statusResponse);
-    
-    if (status.maxRequestsReached) {
-      throw MaxNumberOfRequestsReached();
-    }
-    */
-
     final http.BaseRequest request = _buildRequest(
       path,
       parameters,
@@ -171,7 +157,7 @@ class FootballAPIClient implements ApiClient {
     if (streamedResponse.statusCode == 200) {
       final response = await http.Response.fromStream(streamedResponse);
       final decodedJson = jsonDecode(response.body);
-      return APIResponse.status(decodedJson, Status.fromJson).response.first as SubscriptionStatus;
+      return APIResponse.status(decodedJson, SubscriptionStatus.fromJson).response.first as SubscriptionStatus;
     } else {
       throw ServiceError(streamedResponse.statusCode);
     }
@@ -187,7 +173,7 @@ class FootballAPIClient implements ApiClient {
       dev_tools.log('Decoded Result: ${decodedJson['response']}');
       return APIResponse.fromJson(decodedJson, fromJson);
     } else {
-      dev_tools.log('API Client Failed ${streamedResponse.statusCode}');
+      dev_tools.log('[Error]: FootballAPIClient Failed with status code: ${streamedResponse.statusCode}');
       throw ServiceError(streamedResponse.statusCode);
     }
   }

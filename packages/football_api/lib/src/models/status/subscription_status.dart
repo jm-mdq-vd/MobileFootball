@@ -10,6 +10,7 @@ class Requests {
   });
 
   final int current;
+  @JsonKey(name: 'limit_day')
   final int limitDay;
 
   factory Requests.fromJson(Map<String, dynamic> json) => _$RequestsFromJson(json);
@@ -19,9 +20,9 @@ class Requests {
 class SubscriptionStatus {
   SubscriptionStatus({required this.requests});
 
-  final Map<String, int> requests;
+  final Requests requests;
 
-  bool get maxRequestsReached => requests['current']! >= requests['limit_day']!;
+  bool get maxRequestsReached => requests.current! >= requests.limitDay!;
 
   factory SubscriptionStatus.fromJson(Map<String, dynamic> json) => _$SubscriptionStatusFromJson(json);
 }

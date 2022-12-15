@@ -58,32 +58,11 @@ class CacheRepository  {
   }
 
   String _keyForEndpoint(Endpoint endpoint, Map<String, dynamic> parameters) {
-    switch (endpoint) {
-      case Endpoint.countries:
-        return 'countries';
-      case Endpoint.leagues:
-        final String code = parameters['code'];
-        return 'leagues_$code';
-      case Endpoint.teams:
-        String suffix;
-        if (parameters['id'] != null) {
-          suffix = '${parameters['id']}';
-          return 'teams_' + suffix;
-        }
-
-        suffix = '${parameters['league']}_${parameters['season']}';
-        return 'teams_' + suffix;
-      case Endpoint.standings:
-        final String suffix = '${parameters['league']}_${parameters['season']}';
-        return 'standings_' + suffix;
-      case Endpoint.fixtures:
-        final String suffix = '${parameters['league']}_${parameters['season']}';
-        return 'fixtures_' + suffix;
-      case Endpoint.squads:
-        final String team = '${parameters['team']}';
-        return 'squad_' + team;
-      default:
-        return '';
+    var key = Endpoint.countries.path + '_';
+    for (var parameter in parameters.entries) {
+      key += parameter.value.toString() + '_';
     }
+
+    return key;
   }
 }

@@ -79,15 +79,15 @@ class StandingsHeader extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           height: 70,
           decoration: BoxDecoration(
-            color: Color(0xFFF6F6F6),
+            color: const Color(0xFFF6F6F6),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(16),
               topRight: Radius.circular(16),
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey,
-                blurRadius: 3.5,
+                color: const Color(0xFFDDDDDD),
+                blurRadius: 40,
                 offset: Offset(1, -2.5,),
               ),
             ],
@@ -123,27 +123,31 @@ class StandingsHeader extends StatelessWidget {
               ),
               Container(
                 width: 120,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const UnderlinedBoldText('J',),
-                    const UnderlinedBoldText('G',),
-                    const UnderlinedBoldText('E',),
-                    const UnderlinedBoldText('P',),
-                  ],
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const UnderlinedBoldText('J',),
+                      const UnderlinedBoldText('G',),
+                      const UnderlinedBoldText('E',),
+                      const UnderlinedBoldText('P',),
+                    ],
+                  ),
                 ),
               ),
               Container(
                 width: 30,
                 child: Align(
-                  alignment: Alignment.centerRight,
+                  alignment: Alignment.bottomRight,
                   child: const UnderlinedBoldText('PTS',),
                 ),
               ),
             ],
           ),
         ),
-        Container(height: 1, color: Colors.grey,)
+        Container(height: 1, color: Colors.grey,),
       ],
     );
   }
@@ -279,7 +283,6 @@ class StandingsGroupView extends StatelessWidget {
               );
             }).toList(),
           ),
-          Container(height: 1, color: Colors.grey,),
           Container(
             padding: const EdgeInsets.symmetric(
                 horizontal: 8,

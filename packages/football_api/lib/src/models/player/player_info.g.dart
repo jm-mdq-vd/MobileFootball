@@ -61,20 +61,22 @@ Map<String, dynamic> _$PlayerToJson(Player instance) => <String, dynamic>{
 PlayerStatistics _$PlayerStatisticsFromJson(Map<String, dynamic> json) =>
     PlayerStatistics(
       team: BasicTeamInfo.fromJson(json['team'] as Map<String, dynamic>),
-      league: League.fromJson(json['league'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PlayerStatisticsToJson(PlayerStatistics instance) =>
     <String, dynamic>{
       'team': instance.team,
-      'league': instance.league,
     };
 
 PlayerInfo _$PlayerInfoFromJson(Map<String, dynamic> json) => PlayerInfo(
       player: Player.fromJson(json['player'] as Map<String, dynamic>),
+      statistics: (json['statistics'] as List<dynamic>)
+          .map((e) => PlayerStatistics.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$PlayerInfoToJson(PlayerInfo instance) =>
     <String, dynamic>{
       'player': instance.player,
+      'statistics': instance.statistics,
     };

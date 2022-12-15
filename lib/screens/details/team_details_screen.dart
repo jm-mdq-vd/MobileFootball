@@ -6,8 +6,10 @@ import 'package:football_repository/football_repository.dart';
 import 'package:mobile_football/blocs/resource_bloc.dart';
 import 'package:mobile_football/blocs/resource_status.dart';
 import 'package:mobile_football/screens/table_screens/squad_table_screen.dart';
+import 'package:mobile_football/screens/table_screens/fixture_table_screen.dart';
 import 'package:mobile_football/screens/screen_requirements.dart';
 import 'package:mobile_football/widgets/generics/loaders/screen_loader.dart';
+import 'package:mobile_football/widgets/generics/details/detail_text.dart';
 import 'package:mobile_football/widgets/buttons/action_button.dart';
 import 'package:mobile_football/utility/network_image_provider.dart';
 
@@ -123,23 +125,75 @@ class TeamDetailScreen extends StatelessWidget {
               const SizedBox(height: 16,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16,),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                child: Column(
                   children: [
-                    ActionButton(
-                      action: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SquadTableScreen(requirements: _requirements,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        BorderedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SquadTableScreen(requirements: _requirements,),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'VER PLANTEL',
+                                style: TextStyle(fontSize: 24,),
+                              ),
+                              const SizedBox(width: 16,),
+                              const Icon(FontAwesomeIcons.peopleGroup),
+                            ],
                           ),
-                        );
-                      },
-                      labelText: 'VER PLANTEL',
-                      style: ActionButton.defaultStyle.copyWith(fontSize: 24,),
+                          // style: ActionButton.defaultStyle.copyWith(fontSize: 24,),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 16,),
-                    const Icon(FontAwesomeIcons.peopleGroup),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        BorderedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Scaffold(
+                                  appBar: AppBar(
+                                    title: Text(team.name),
+                                  ),
+                                  body: FixtureTableScreen(
+                                    requirements: LeagueSeasonRequirements(
+                                      values: {
+                                        LeagueSeasonRequirements.teamKey: _requirements.teamId,
+                                        LeagueSeasonRequirements.seasonKey: _requirements.season,
+                                      },
+                                    ),
+                                    seeSingleTeam: true,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'VER FIXTURE',
+                                style: TextStyle(fontSize: 24,),
+                              ),
+                              const SizedBox(width: 16,),
+                              const Icon(FontAwesomeIcons.list),
+                            ],
+                          ),
+                          // style: ActionButton.defaultStyle.copyWith(fontSize: 24,),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -235,36 +289,18 @@ class TeamInfoCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TeamDetailText('Fundado en el año: ${team.founded}',),
+        DetailText('Fundado en el año: ${team.founded}',),
         const SizedBox(height: 8,),
-        TeamDetailText('Dirección del estadio: ${team.address}',),
+        DetailText('Dirección del estadio: ${team.address}',),
         const SizedBox(height: 8,),
-        TeamDetailText('Capacidad del estadio: ${team.stadiumCapacity} Personas',),
+        DetailText('Capacidad del estadio: ${team.stadiumCapacity} Personas',),
         const SizedBox(height: 8,),
-        TeamDetailText('Pais: ${team.country}',),
+        DetailText('Pais: ${team.country}',),
         const SizedBox(height: 8,),
-        TeamDetailText('Ciudad: ${team.city}',),
+        DetailText('Ciudad: ${team.city}',),
       ],
     );
   }
 }
 
-class TeamDetailText extends StatelessWidget {
-  const TeamDetailText(this.data, {super.key, this.fontSize = 18});
 
-  final String data;
-  final double fontSize;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      child: Text(
-        data,
-        style: TextStyle(
-          fontSize: fontSize,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-}

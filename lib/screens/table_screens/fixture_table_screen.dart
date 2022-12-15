@@ -3,28 +3,34 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:football_repository/football_repository.dart';
 
 import 'package:mobile_football/blocs/resource_bloc.dart';
-import 'package:mobile_football/screens/table_screens/event_table_screen.dart';
 import 'package:mobile_football/utility/extensions/date_extension.dart';
-import 'package:mobile_football/utility/network_image_provider.dart';
+import 'package:mobile_football/screens/table_screens/representations/fixture_cell_representation.dart';
+import 'package:mobile_football/screens/table_screens/event_table_screen.dart';
 import 'package:mobile_football/screens/resource_status_screen.dart';
 import 'package:mobile_football/screens/screen_requirements.dart';
+import 'package:mobile_football/widgets/views/team_view.dart';
 
 class FixtureTableScreen extends StatelessWidget {
   const FixtureTableScreen({
     super.key,
     required LeagueSeasonRequirements requirements,
-  }) : _requirements = requirements;
+    bool seeSingleTeam = false,
+  }) : _requirements = requirements, _seeSingleTeam = seeSingleTeam;
 
   final LeagueSeasonRequirements _requirements;
+  final bool _seeSingleTeam;
 
   @override
   Widget build(BuildContext context) {
+    final event = _seeSingleTeam ?
+      getFixturesByTeam(_requirements.teamId, _requirements.season) :
+      getFixturesByLeague(_requirements.leagueId!, _requirements.season);
     return RepositoryProvider<FixtureRepository>(
       create: (context) => FixtureRepository(null),
       child: BlocProvider<ResourceBloc<Fixture>>(
         create: (context) => ResourceBloc(
           repository: context.read<FixtureRepository>(),
-        )..add(getFixturesByLeague(_requirements.leagueId, _requirements.season)),
+        )..add(event),
         child: BlocBuilder<ResourceBloc<Fixture>, ResourceState<Fixture>>(
           builder: (context, state) {
             return ResourceStatusScreen(
@@ -73,6 +79,7 @@ class _FixtureTableState extends State<FixtureTable> {
           color: const Color(0xB9EEECEC),
           child: Column(
             children: [
+              const SizedBox(height: 8.0,),
               Expanded(
                 child: ListView.builder(
                   itemBuilder: (context, index) {
@@ -104,31 +111,13 @@ class _FixtureTableState extends State<FixtureTable> {
                   itemCount: widget.itemCount,
                 ),
               ),
+              const SizedBox(height: 8.0,),
             ],
           ),
         ),
       ),
     );
   }
-}
-
-
-class FixtureCellRepresentation {
-  FixtureCellRepresentation({required this.fixture});
-
-  final Fixture fixture;
-
-  String get id => fixture.id.toString();
-  String get referee => fixture.referee ?? 'No Disponible';
-  DateTime get date => fixture.date;
-  String get leagueName => fixture.leagueName;
-  FixtureTeamInfo get home => fixture.home;
-  FixtureTeamInfo get away => fixture.away;
-  String get homeTeamGoals => fixture.home.goals != -1 ? fixture.home.goals.toString() : '-';
-  String get awayTeamGoals => fixture.away.goals != -1 ? fixture.away.goals.toString() : '-';
-  String get stadium => fixture.stadium;
-  String get round => fixture.round;
-  bool get canSeeProgress => fixture.status == FixtureStatus.inProgress || fixture.status == FixtureStatus.finished;
 }
 
 class FixtureCell extends StatelessWidget {
@@ -146,8 +135,14 @@ class FixtureCell extends StatelessWidget {
     return Container(
       height: 160,
       decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(borderRadius),),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(borderRadius,),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFDDDDDD,),
+            blurRadius: 40.0,
+          ),
+        ],
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -156,7 +151,7 @@ class FixtureCell extends StatelessWidget {
           Text(
             representation.stadium,
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 12,
               color: Colors.grey,
             ),
           ),
@@ -216,7 +211,7 @@ class FixtureCell extends StatelessWidget {
               Text(
                 'Fecha: ${representation.date.dayMonthYear}',
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: 12,
                   color: Colors.grey,
                 ),
               ),
@@ -224,48 +219,12 @@ class FixtureCell extends StatelessWidget {
               Text(
                 'Round: ${representation.round}',
                 style: TextStyle(
-                  fontSize: 10,
+                  fontSize: 12,
                   color: Colors.grey,
                 ),
               ),
             ],
           ),
-        ],
-      ),
-    );
-  }
-}
-
-class TeamView extends StatelessWidget {
-  const TeamView({
-    Key? key,
-    required this.team,
-  }) : super(key: key);
-
-  final FixtureTeamInfo team;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 100,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 50,
-            height: 50,
-            child: NetworkImageProvider.image(team.logo,),
-          ),
-          SizedBox(height: 8,),
-          Text(
-            team.name,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 12,
-              overflow: TextOverflow.fade,
-              color: Colors.black,
-            ),
-          )
         ],
       ),
     );

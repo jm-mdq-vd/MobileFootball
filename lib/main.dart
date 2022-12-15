@@ -10,12 +10,6 @@ void main() {
   runApp(const MobileFootballApp());
 }
 
-class Id {
-  Id({required this.value});
-
-  final int value;
-}
-
 class MobileFootballApp extends StatelessWidget {
   const MobileFootballApp({super.key});
 

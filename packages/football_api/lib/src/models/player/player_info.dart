@@ -76,11 +76,11 @@ class Player extends BasicPlayerInfo implements Deserializable {
 class PlayerStatistics implements Deserializable {
   PlayerStatistics({
     required this.team,
-    required this.league
+    // required this.league
   });
 
   final BasicTeamInfo team;
-  final League league;
+  // final League league;
 
   factory PlayerStatistics.fromJson(Map<String, dynamic> json) => _$PlayerStatisticsFromJson(json);
 
@@ -92,11 +92,11 @@ class PlayerStatistics implements Deserializable {
 class PlayerInfo implements Deserializable {
   PlayerInfo({
     required this.player,
-    // required this.statistics,
+    required this.statistics,
   });
 
   final Player player;
-  // final List<PlayerStatistics> statistics;
+  final List<PlayerStatistics> statistics;
 
   factory PlayerInfo.fromJson(Map<String, dynamic> json) => _$PlayerInfoFromJson(json);
 

@@ -5,8 +5,9 @@ import 'package:football_repository/football_repository.dart';
 import 'package:mobile_football/blocs/resource_bloc.dart';
 import 'package:mobile_football/screens/resource_status_screen.dart';
 import 'package:mobile_football/screens/screen_requirements.dart';
-import 'package:mobile_football/screens/table_screens/fixture_table_screen.dart';
+import 'package:mobile_football/screens/table_screens/representations/fixture_cell_representation.dart';
 import 'package:mobile_football/utility/network_image_provider.dart';
+import 'package:mobile_football/widgets/views/team_view.dart';
 
 class EventTableScreenRequirements implements ScreenRequirements {
   EventTableScreenRequirements({required Map<String, dynamic> values}) : _values = values;
@@ -89,14 +90,7 @@ class EventTableScreen extends StatelessWidget {
                   color: const Color(0xB9EEECEC),
                   child: Column(
                     children: [
-                      Container(
-                        height: 16,
-                        color: Colors.white,
-                      ),
-                      FixtureCell(
-                        representation: _requirements.fixture,
-                        borderRadius: 0,
-                      ),
+                      EventTableHeader(representation: _requirements.fixture,),
                       Container(
                         width: MediaQuery.of(context).size.width,
                         padding: const EdgeInsets.only(top: 8, left: 4, right: 4, bottom: 4),
@@ -134,6 +128,12 @@ class EventTableScreen extends StatelessWidget {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.all(Radius.circular(8),),
                                   color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xFFDDDDDD),
+                                      blurRadius: 15.0,
+                                    ),
+                                  ],
                                 ),
                                 child: Center(
                                   child: Row(
@@ -184,6 +184,85 @@ class EventTableScreen extends StatelessWidget {
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+class EventTableHeader extends StatelessWidget {
+  const EventTableHeader({
+    super.key,
+    required FixtureCellRepresentation representation,
+  }) : _representation = representation;
+
+  final FixtureCellRepresentation _representation;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color(0xFFFFFFFF),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const SizedBox(height: 12,),
+          Text(
+            _representation.stadium,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TeamView(
+                team: _representation.home,
+                size: 120,
+              ),
+              SizedBox(width: 16,),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        _representation.homeTeamGoals,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(width: 16,),
+                      Text(
+                        'VS',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(width: 16,),
+                      Text(
+                        _representation.awayTeamGoals,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(width: 16,),
+              TeamView(
+                team: _representation.away,
+                size: 120,
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

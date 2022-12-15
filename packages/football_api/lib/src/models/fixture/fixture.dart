@@ -73,7 +73,7 @@ class FixtureLeague implements Deserializable {
   final String name;
   final String country;
   final String logo;
-  final String flag;
+  final String? flag;
   final String round;
 
   factory FixtureLeague.fromJson(Map<String, dynamic> json) => _$FixtureLeagueFromJson(json);

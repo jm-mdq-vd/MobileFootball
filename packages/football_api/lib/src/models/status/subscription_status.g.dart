@@ -8,17 +8,17 @@ part of 'subscription_status.dart';
 
 Requests _$RequestsFromJson(Map<String, dynamic> json) => Requests(
       current: json['current'] as int,
-      limitDay: json['limitDay'] as int,
+      limitDay: json['limit_day'] as int,
     );
 
 Map<String, dynamic> _$RequestsToJson(Requests instance) => <String, dynamic>{
       'current': instance.current,
-      'limitDay': instance.limitDay,
+      'limit_day': instance.limitDay,
     };
 
 SubscriptionStatus _$SubscriptionStatusFromJson(Map<String, dynamic> json) =>
     SubscriptionStatus(
-      requests: Map<String, int>.from(json['requests'] as Map),
+      requests: Requests.fromJson(json['requests'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$SubscriptionStatusToJson(SubscriptionStatus instance) =>

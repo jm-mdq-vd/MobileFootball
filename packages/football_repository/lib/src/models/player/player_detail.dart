@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../team/team.dart';
+
 class PlayerDetail extends Equatable {
   PlayerDetail({
     required this.id,
@@ -14,6 +16,7 @@ class PlayerDetail extends Equatable {
     required this.height,
     required this.weight,
     required this.photo,
+    required this.team,
   });
 
   final int id;
@@ -28,6 +31,9 @@ class PlayerDetail extends Equatable {
   final String height;
   final String weight;
   final String photo;
+  final Team team;
+
+  String get teamLogo => team.logo;
 
   @override
   List<Object> get props => [
@@ -35,5 +41,14 @@ class PlayerDetail extends Equatable {
     name,
     firstname,
     lastname,
+    age,
+    date,
+    place,
+    country,
+    nationality,
+    height,
+    weight,
+    photo,
+    team,
   ];
 }

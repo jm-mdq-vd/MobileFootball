@@ -1,3 +1,4 @@
+import 'dart:developer' as dev_tools;
 import 'package:json_annotation/json_annotation.dart';
 
 import '../interfaces/deserializable.dart';
@@ -42,12 +43,12 @@ class APIResponse<T> {
     );
   }
 
-  static APIResponse status<T>(Map<String, dynamic> json, T Function(Map<String, dynamic> map) fromJson) {
+  static APIResponse status<T>(Map<String, dynamic> json, T Function(Map<String, dynamic> json) fromJson) {
     return APIResponse<T>(
       get: json['get'],
       results: json['results'],
       paging: Paging.fromJson(json['paging']),
-      response: [fromJson(json['response'])],
+      response: [fromJson(json['response'].first)],
     );
   }
 }

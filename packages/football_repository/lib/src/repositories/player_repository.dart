@@ -1,8 +1,9 @@
 import 'dart:developer' as dev_tools;
 
-import 'package:football_api/football_api.dart';
+import 'package:football_api/football_api.dart' hide Team;
 
 import '../models/player/player_detail.dart';
+import '../models/team/team.dart';
 import '../cache/cache_implementable.dart';
 
 class PlayerRepository extends TimedClientCacheRepository<PlayerDetail> {
@@ -27,6 +28,12 @@ class PlayerRepository extends TimedClientCacheRepository<PlayerDetail> {
       height: info.player.height,
       weight: info.player.weight,
       photo: info.player.photo,
+      team: Team(
+        id: info.statistics.first.team.id,
+        name: info.statistics.first.team.name,
+        logo: info.statistics.first.team.logo,
+        country: '',
+      ),
     );
 
     save(

@@ -31,3 +31,26 @@ class ActionButton extends StatelessWidget {
     );
   }
 }
+
+class BorderedButton extends StatelessWidget {
+  const BorderedButton({
+    super.key,
+    required Function() onPressed,
+    required Widget child,
+  }) : _onPressed = onPressed, _child = child;
+
+  final Widget _child;
+  final Function() _onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: MaterialButton(
+        onPressed: _onPressed,
+        color: Colors.black,
+        textColor: Colors.white,
+        child: _child,
+      ),
+    );
+  }
+}
